@@ -8,5 +8,6 @@
     <string name="title_activity_real_time_graphics">RealTimeGraphics</string>
     <string name="title_activity_other_real_time_graphics">OtherRealTImeGraphicsActivity</string>
     <string name="title_activity_bar_graph">BarGraphActivity</string>
+    <string name="title_activity_drower">DrowerActivity</string>
 
 </resources>

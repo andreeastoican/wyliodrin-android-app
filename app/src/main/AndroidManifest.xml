@@ -30,6 +30,10 @@
             android:name="com.wyliodrin.mobileapp.BarGraphActivity"
             android:label="@string/title_activity_bar_graph" >
         </activity>
+        <activity
+            android:name="com.wyliodrin.mobileapp.DrowerActivity"
+            android:label="@string/title_activity_drower" >
+        </activity>
     </application>
 
 </manifest>
