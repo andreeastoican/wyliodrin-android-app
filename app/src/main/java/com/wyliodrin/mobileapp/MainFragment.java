@@ -1,6 +1,5 @@
 package com.wyliodrin.mobileapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.LinearLayout;
 
 import com.wyliodrin.mobileapp.api.WylioBoard;
 import com.wyliodrin.mobileapp.widgets.StepGraphWidget;
-import com.wyliodrin.mobileapp.widgets.Widget;
 
 import java.util.List;
 import java.util.Random;
@@ -22,7 +20,6 @@ public class MainFragment extends Fragment {
     int x = 0;
     Random rand = new Random();
 
-    List<Widget> widgets;
 
     public MainFragment(){}
 
@@ -50,14 +47,6 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 board.sendMessage("ledoff", "ledoff");
-            }
-        });
-
-        Button realTimeGraphic = (Button) rootView.findViewById(R.id.realtTimeGraphButton);
-        realTimeGraphic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addGraph();
             }
         });
 
