@@ -39,7 +39,7 @@
             android:id="@+id/button_elem4"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Get line and point graph"/>
+            android:text="Add a button"/>
         <!-- <ListView android:id="@+id/left_drawer"
             android:layout_width="240dp"
             android:layout_height="match_parent"

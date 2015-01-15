@@ -7,10 +7,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +16,8 @@ import com.wyliodrin.mobileapp.widgets.BarGraphWidget;
 import com.wyliodrin.mobileapp.widgets.LineAndPointGraphWidget;
 import com.wyliodrin.mobileapp.widgets.StepGraphWidget;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -28,6 +28,8 @@ public class MainActivity extends ActionBarActivity {
     int x_bar_graph = 0;
     int x_step_graph = 0;
     Random rand = new Random();
+    static List<Button> addedButtons;
+    static int i=0;
 
     //private String[] widgetTitles;
     private DrawerLayout mDrawerLayout;
@@ -42,6 +44,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
+        addedButtons = new ArrayList<Button>();
+
        // widgetTitles = new String[] {"Moon", "Sun"};
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         //mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -51,6 +55,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View view) {
                 deletedTextView(R.id.text1);
                 addStepGraph();
+                mDrawerLayout.closeDrawers();
             }
         });
 
@@ -60,6 +65,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View view) {
                 deletedTextView(R.id.text2);
                 addBarGraph();
+                mDrawerLayout.closeDrawers();
             }
         });
 
@@ -69,6 +75,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View view) {
                 deletedTextView(R.id.text3);
                 addLineGraph();
+                mDrawerLayout.closeDrawers();
             }
         });
 
@@ -80,13 +87,28 @@ public class MainActivity extends ActionBarActivity {
 
                 Button myButton = new Button(MainActivity.this);
                 myButton.setText("Push Me");
-                
+                addedButtons.add(i,myButton);
 
                 LinearLayout layout = (LinearLayout) findViewById(R.id.graphContainer4);
                 layout.getLayoutParams().height = 300;
                 layout.getLayoutParams().width = 200;
                 layout.requestLayout();
-                layout.addView(myButton);
+                layout.addView(addedButtons.get(i));
+                //layout.addView(myButton);
+
+                mDrawerLayout.closeDrawers();
+
+                if(i == 0) {
+                    addedButtons.get(i).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Toast.makeText(getApplicationContext(), "Ai apasat pe buton 1",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                i++;
 
             }
         });
@@ -114,6 +136,12 @@ public class MainActivity extends ActionBarActivity {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        i=0;
     }
 
     public void deletedTextView(int id) {

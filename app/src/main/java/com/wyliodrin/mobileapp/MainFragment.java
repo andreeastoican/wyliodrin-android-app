@@ -34,22 +34,6 @@ public class MainFragment extends Fragment {
 
         //final WylioBoard board = new WylioBoard("b883db27-a072-4481-aff2-2e5297d781c80a6febc0-6263-4118-9eeb-2fbb0530585b46a813ed-7eda-49b4-be5e-4a319c6c0da13a155792-fc2e-413f-82d9-9728ca5b829a");
 
-        Button sendButtonOn = (Button) rootView.findViewById(R.id.buttonon);
-        sendButtonOn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                board.sendMessage("ledon", "ledon");
-            }
-        });
-
-        Button sendButtonOff = (Button) rootView.findViewById(R.id.buttonoff);
-        sendButtonOff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                board.sendMessage("ledoff", "ledoff");
-            }
-        });
-
         return rootView;
     }
 

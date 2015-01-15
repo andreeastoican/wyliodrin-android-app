@@ -14,31 +14,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.testmessage.MainActivity"
-     >
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Send a message to one of your boards"
-        android:shadowColor="#C2DFFF"/>
-
-    <Button
-        android:id="@+id/buttonon"
-        android:text="LED ON"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textView1"
-        />
-
-    <Button
-        android:id="@+id/buttonoff"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LED OFF"
-        android:layout_below="@id/textView1"
-        android:layout_toRightOf="@id/buttonon" />
+    tools:context="com.example.testmessage.MainActivity" >
 
     <LinearLayout
         android:orientation="vertical"
@@ -52,6 +28,7 @@
             android:layout_height="match_parent"
             android:text="Add un item." />
     </LinearLayout>
+
     <LinearLayout
         android:orientation="vertical"
         android:id="@+id/graphContainer2"
@@ -65,6 +42,7 @@
             android:layout_height="match_parent"
             android:text="Add un item." />
     </LinearLayout>
+
     <LinearLayout
         android:orientation="vertical"
         android:id="@+id/graphContainer3"
@@ -78,6 +56,12 @@
             android:layout_height="match_parent"
             android:text="Add un item." />
     </LinearLayout>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/graphContainer3"
+        xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
         android:orientation="vertical"
         android:id="@+id/graphContainer4"
@@ -91,6 +75,7 @@
             android:layout_height="match_parent"
             android:text="Add un item." />
     </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>
 </ScrollView>
