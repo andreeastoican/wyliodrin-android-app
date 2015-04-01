@@ -9,31 +9,22 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <activity
-            android:name="com.wyliodrin.mobileapp.MainActivity"
+            android:name=".NewDashboardActivity"
             android:label="@string/app_name" >
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.wyliodrin.mobileapp.RealTimeGraphicsActivity"
-            android:label="@string/title_activity_real_time_graphics" >
-        </activity>
-        <activity
-            android:name="com.wyliodrin.mobileapp.OtherRealTImeGraphicsActivity"
-            android:label="@string/title_activity_other_real_time_graphics" >
-        </activity>
-        <activity
-            android:name="com.wyliodrin.mobileapp.BarGraphActivity"
-            android:label="@string/title_activity_bar_graph" >
-        </activity>
-        <activity
-            android:name="com.wyliodrin.mobileapp.DrowerActivity"
-            android:label="@string/title_activity_drower" >
-        </activity>
+
     </application>
 
 </manifest>

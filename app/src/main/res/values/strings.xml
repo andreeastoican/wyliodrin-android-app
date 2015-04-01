@@ -3,11 +3,13 @@
 
     <string name="app_name">Wyliodrin</string>
     <string name="hello_world">Hello world!</string>
+    <string name="welcome">Welcome to</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_dynamic_xyplot">DynamicXYPlotActivity</string>
     <string name="title_activity_real_time_graphics">RealTimeGraphics</string>
     <string name="title_activity_other_real_time_graphics">OtherRealTImeGraphicsActivity</string>
     <string name="title_activity_bar_graph">BarGraphActivity</string>
     <string name="title_activity_drower">DrowerActivity</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>
