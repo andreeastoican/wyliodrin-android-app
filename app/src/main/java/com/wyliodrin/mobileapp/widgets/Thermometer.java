@@ -67,7 +67,7 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
 
                 bar.setLayoutParams(params);
 
-                setLimits(-20, 70);
+                //setLimits(-20, 70);
 
             }
         });
@@ -91,6 +91,7 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
         for (double x = max; x >= min; x -= step, i++) {
             TextView text = new TextView(getContext());
             text.setText("" + (int) x);
+            text.setTextColor(R.color.black);
 
             LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.addRule(ALIGN_PARENT_RIGHT);
@@ -101,11 +102,22 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
             labels.add(text);
         }
 
-        setValue(0);
+        //setValue(40);
     }
 
     public void setValue(double value) {
         this.value = value;
+
+        TextView textView = new TextView(getContext());
+        textView.setText((int)value + " C");
+        textView.setTextColor(R.color.black);
+
+        LayoutParams paramsTextView = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        paramsTextView.addRule(ALIGN_PARENT_BOTTOM);
+        paramsTextView.bottomMargin = (int) (0.06 * height);
+        paramsTextView.leftMargin = (int) (0.21 * width);
+        textView.setLayoutParams(paramsTextView);
+        addView(textView);
 
         if(value < min) value = min;
         if(value > max) value = max;
@@ -120,5 +132,13 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
     @Override
     public void addData(WylioMessage message) {
 
+    }
+
+    public void setMin (double minValue) {
+        this.min = minValue;
+    }
+
+    public void setMax (double maxValue) {
+        this.max = maxValue;
     }
 }

@@ -22,6 +22,11 @@
         android:dividerHeight="0dp"
         android:background="#111" >
         <Button
+            android:id="@+id/add_thermometer_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Thermometer"/>
+        <Button
             android:id="@+id/button_elem1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

@@ -1,20 +1,27 @@
 package com.wyliodrin.mobileapp;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.wyliodrin.mobileapp.widgets.BarGraphWidget;
 import com.wyliodrin.mobileapp.widgets.LineAndPointGraphWidget;
 import com.wyliodrin.mobileapp.widgets.StepGraphWidget;
+import com.wyliodrin.mobileapp.widgets.Thermometer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +51,7 @@ public class NewDashboardActivity extends FragmentActivity {
     private Button button3;
     private Button button4;
     private Button button5;
+    private Button addThermometerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +63,83 @@ public class NewDashboardActivity extends FragmentActivity {
         stepGraphWidgetArrayList = new ArrayList<StepGraphWidget>();
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        addThermometerButton = (Button) findViewById(R.id.add_thermometer_button);
+        addThermometerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // set the parameters
+
+                ScrollView scroll = new ScrollView(getApplicationContext());
+                scroll.setBackgroundColor(android.R.color.transparent);
+                scroll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(NewDashboardActivity.this);
+                alertDialogBuilder.setTitle("Choose the thermometer properties");
+
+                LayoutInflater inflater= LayoutInflater.from(getApplicationContext());
+                final View alert_dialog_xml =inflater.inflate(R.layout.alert_dialog_properties, null);
+                alertDialogBuilder.setView(alert_dialog_xml);
+
+                alertDialogBuilder.setNegativeButton("Done",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+
+                        String width="";
+                        String height="";
+                        String minDegree="";
+                        String maxDegree="";
+
+                        EditText widthEditText = (EditText) alert_dialog_xml.findViewById(R.id.thermometer_width);
+                        if(widthEditText != null) {
+                            width = widthEditText.getText().toString();
+                        }
+
+                        EditText heightEditText = (EditText) alert_dialog_xml.findViewById(R.id.thermometer_height);
+                        if (heightEditText != null) {
+                            height = heightEditText.getText().toString();
+                        }
+
+                        EditText minDegreeEditText = (EditText) alert_dialog_xml.findViewById(R.id.thermometer_min);
+                        if (minDegreeEditText != null) {
+                            minDegree = minDegreeEditText.getText().toString();
+                        }
+
+                        EditText maxDegreeEditText = (EditText) alert_dialog_xml.findViewById(R.id.thermometer_max);
+                        if(maxDegreeEditText != null) {
+                            maxDegree = maxDegreeEditText.getText().toString();
+                        }
+
+                        dialog.cancel();
+
+                        // add the thermometer
+                        Thermometer thermometer = new Thermometer(getApplicationContext());
+                        thermometer.setMax(Float.parseFloat(maxDegree));
+                        thermometer.setMin(Float.parseFloat(minDegree));
+
+                        thermometer.setLimits(Float.parseFloat(minDegree), Float.parseFloat(maxDegree));
+                        thermometer.setValue(40);
+
+                        LinearLayout layout = (LinearLayout) findViewById(R.id.thermometer_layout);
+                        layout.addView(thermometer);
+
+                    }
+                });
+
+                alertDialogBuilder.setNeutralButton("Cancel",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+                mDrawerLayout.closeDrawers();
+
+            }
+        });
 
         button1 = (Button) findViewById(R.id.button_elem1);
         button1.setOnClickListener(new View.OnClickListener() {
