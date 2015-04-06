@@ -7,15 +7,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.wyliodrin.mobileapp.widgets.BarGraphWidget;
@@ -38,12 +34,6 @@ public class NewDashboardActivity extends FragmentActivity {
     static List<Button> addedButtons;
     static int i=0;
 
-    //Thread-uri
-    ArrayList<Thread> threadArrayList;
-
-    static int i_stepG = 0;
-    ArrayList<StepGraphWidget> stepGraphWidgetArrayList;
-
     private DrawerLayout mDrawerLayout;
 
     private Button button1;
@@ -53,14 +43,31 @@ public class NewDashboardActivity extends FragmentActivity {
     private Button button5;
     private Button addThermometerButton;
 
+    private View.OnLongClickListener widgetLongClick = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(final View view) {
+
+            new AlertDialog.Builder(NewDashboardActivity.this).setTitle("Remove widget?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            LinearLayout layout = (LinearLayout) findViewById(R.id.widgetsContainer);
+                            layout.removeView(view);
+
+                            // TODO remove from list
+                        }
+                    }).setNegativeButton("No", null).show();
+
+            return true;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_dashboard);
 
         addedButtons = new ArrayList<Button>();
-        threadArrayList = new ArrayList<Thread>();
-        stepGraphWidgetArrayList = new ArrayList<StepGraphWidget>();
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -68,76 +75,8 @@ public class NewDashboardActivity extends FragmentActivity {
         addThermometerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                // set the parameters
-
-                ScrollView scroll = new ScrollView(getApplicationContext());
-                scroll.setBackgroundColor(android.R.color.transparent);
-                scroll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT));
-
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(NewDashboardActivity.this);
-                alertDialogBuilder.setTitle("Choose the thermometer properties");
-
-                LayoutInflater inflater= LayoutInflater.from(getApplicationContext());
-                final View alert_dialog_xml =inflater.inflate(R.layout.alert_dialog_properties, null);
-                alertDialogBuilder.setView(alert_dialog_xml);
-
-                alertDialogBuilder.setNegativeButton("Done",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
-
-                        String width="";
-                        String height="";
-                        String minDegree="";
-                        String maxDegree="";
-
-                        EditText widthEditText = (EditText) alert_dialog_xml.findViewById(R.id.thermometer_width);
-                        if(widthEditText != null) {
-                            width = widthEditText.getText().toString();
-                        }
-
-                        EditText heightEditText = (EditText) alert_dialog_xml.findViewById(R.id.thermometer_height);
-                        if (heightEditText != null) {
-                            height = heightEditText.getText().toString();
-                        }
-
-                        EditText minDegreeEditText = (EditText) alert_dialog_xml.findViewById(R.id.thermometer_min);
-                        if (minDegreeEditText != null) {
-                            minDegree = minDegreeEditText.getText().toString();
-                        }
-
-                        EditText maxDegreeEditText = (EditText) alert_dialog_xml.findViewById(R.id.thermometer_max);
-                        if(maxDegreeEditText != null) {
-                            maxDegree = maxDegreeEditText.getText().toString();
-                        }
-
-                        dialog.cancel();
-
-                        // add the thermometer
-                        Thermometer thermometer = new Thermometer(getApplicationContext());
-                        thermometer.setMax(Float.parseFloat(maxDegree));
-                        thermometer.setMin(Float.parseFloat(minDegree));
-
-                        thermometer.setLimits(Float.parseFloat(minDegree), Float.parseFloat(maxDegree));
-                        thermometer.setValue(40);
-
-                        LinearLayout layout = (LinearLayout) findViewById(R.id.thermometer_layout);
-                        layout.addView(thermometer);
-
-                    }
-                });
-
-                alertDialogBuilder.setNeutralButton("Cancel",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
-                        dialog.cancel();
-                    }
-                });
-
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-
+                Thermometer.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick);
                 mDrawerLayout.closeDrawers();
-
             }
         });
 
@@ -177,7 +116,7 @@ public class NewDashboardActivity extends FragmentActivity {
                 myButton.setText("Push Me");
                 addedButtons.add(i, myButton);
 
-                LinearLayout layout = (LinearLayout) findViewById(R.id.graphContainer4);
+                LinearLayout layout = (LinearLayout) findViewById(R.id.widgetsContainer);
                 layout.getLayoutParams().height = 300;
                 layout.getLayoutParams().width = 200;
                 layout.requestLayout();
@@ -208,7 +147,7 @@ public class NewDashboardActivity extends FragmentActivity {
                 Button myButton = new Button(NewDashboardActivity.this);
                 EditText editText = new EditText(NewDashboardActivity.this);
 
-                LinearLayout layout = (LinearLayout) findViewById(R.id.graphContainer4);
+                LinearLayout layout = (LinearLayout) findViewById(R.id.widgetsContainer);
                 layout.getLayoutParams().height = 300;
                 layout.getLayoutParams().width = 200;
                 layout.requestLayout();
@@ -240,20 +179,16 @@ public class NewDashboardActivity extends FragmentActivity {
     protected void onStop() {
         super.onStop();
         i=0;
-        i_stepG=0;
     }
 
     public void addStepGraph() {
         final StepGraphWidget graph = new StepGraphWidget(NewDashboardActivity.this);
-        stepGraphWidgetArrayList.add(i_stepG, graph);
 
-        LinearLayout layout = (LinearLayout) findViewById(R.id.graphContainer1);
-        //graph.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        layout.getLayoutParams().height = 300;
-        layout.getLayoutParams().width = 200;
-        layout.requestLayout();
+        graph.setLayoutParams(new LinearLayout.LayoutParams(200, 300));
+        graph.setOnLongClickListener(widgetLongClick);
 
-        layout.addView(stepGraphWidgetArrayList.get(i_stepG));
+        LinearLayout layout = (LinearLayout) findViewById(R.id.widgetsContainer);
+        layout.addView(graph);
 
         thread_step = new Thread() {
             @Override
@@ -275,21 +210,17 @@ public class NewDashboardActivity extends FragmentActivity {
                 }
             }
         };
-        threadArrayList.add(i_stepG, thread_step);
-        threadArrayList.get(i_stepG).start();
-        //thread_step.start();
-        i_stepG++;
-
+        thread_step.start();
     }
 
     public void addBarGraph() {
 
         final BarGraphWidget graph = new BarGraphWidget(this);
 
-        LinearLayout layout = (LinearLayout) findViewById(R.id.graphContainer2);
-        layout.getLayoutParams().height = 300;
-        layout.getLayoutParams().width = 200;
-        layout.requestLayout();
+        graph.setLayoutParams(new LinearLayout.LayoutParams(200, 300));
+        graph.setOnLongClickListener(widgetLongClick);
+
+        LinearLayout layout = (LinearLayout) findViewById(R.id.widgetsContainer);
         layout.addView(graph);
 
         thread_bar = new Thread() {
@@ -319,10 +250,10 @@ public class NewDashboardActivity extends FragmentActivity {
 
         final LineAndPointGraphWidget graph = new LineAndPointGraphWidget(this);
 
-        LinearLayout layout = (LinearLayout) findViewById(R.id.graphContainer3);
-        layout.getLayoutParams().height = 300;
-        layout.getLayoutParams().width = 200;
-        layout.requestLayout();
+        graph.setLayoutParams(new LinearLayout.LayoutParams(200, 300));
+        graph.setOnLongClickListener(widgetLongClick);
+
+        LinearLayout layout = (LinearLayout) findViewById(R.id.widgetsContainer);
         layout.addView(graph);
 
         thread_bar = new Thread() {

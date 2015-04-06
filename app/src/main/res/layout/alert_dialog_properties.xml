@@ -87,10 +87,10 @@
                 android:id="@+id/thermometer_min"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
+                android:inputType="numberSigned"
                 android:layout_weight=".5"
                 android:gravity="center"
-                android:maxLength="3"/>
+                android:maxLength="4"/>
         </LinearLayout>
 
         <LinearLayout
@@ -113,10 +113,10 @@
                 android:id="@+id/thermometer_max"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
+                android:inputType="numberSigned"
                 android:layout_weight=".5"
                 android:gravity="center"
-                android:maxLength="3" />
+                android:maxLength="4" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -18,59 +18,12 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:id="@+id/thermometer_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#7DFDFE">
-<!--
-            <com.wyliodrin.mobileapp.widgets.Thermometer
-                android:id="@+id/thermometer"
-                android:layout_width="150px"
-                android:layout_height="516px"
-                android:visibility="visible">
-            </com.wyliodrin.mobileapp.widgets.Thermometer> -->
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:id="@+id/graphContainer1"
+            android:id="@+id/widgetsContainer"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="#7DFDFE">
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:id="@+id/graphContainer2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/graphContainer1"
-            android:background="#FF7D7D">
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:id="@+id/graphContainer3"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/graphContainer2"
-            android:background="#7DFDFE">
-        </LinearLayout>
-
-        <ScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_below="@id/graphContainer3"
-            xmlns:android="http://schemas.android.com/apk/res/android">
-            <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/graphContainer4"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/graphContainer3"
-                android:background="#FF7D7D">
-            </LinearLayout>
-        </ScrollView>
 
     </LinearLayout>
 </ScrollView>
