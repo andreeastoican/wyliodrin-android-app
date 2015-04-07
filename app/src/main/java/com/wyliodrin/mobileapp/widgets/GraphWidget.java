@@ -6,16 +6,19 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 
+import com.androidplot.ui.Formatter;
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.BarFormatter;
+import com.androidplot.xy.BarRenderer;
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.StepFormatter;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
+import com.androidplot.xy.XYSeriesFormatter;
 import com.androidplot.xy.XYStepMode;
 import com.wyliodrin.mobileapp.api.WylioMessage;
 
-import org.achartengine.chart.ScatterChart;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -24,7 +27,13 @@ import java.util.List;
 /**
  * Created by andreea on 12/10/14.
  */
-public class BarGraphWidget extends XYPlot implements InputDataWidget {
+public class GraphWidget extends XYPlot implements InputDataWidget {
+
+    public static enum GraphType {
+        StepGraph,
+        BarGraph,
+        LineGraph
+    }
 
     int maxNumberOfPoints = 10;
 
@@ -46,7 +55,7 @@ public class BarGraphWidget extends XYPlot implements InputDataWidget {
                 Y.remove(0);
             }
 
-            BarGraphWidget.this.redraw();
+            GraphWidget.this.redraw();
         }
 
         @Override
@@ -72,14 +81,32 @@ public class BarGraphWidget extends XYPlot implements InputDataWidget {
 
     private GraphWidgetDataSeries series;
 
-    public BarGraphWidget(Context context, AttributeSet attrs) {
+    public GraphWidget(Context context, AttributeSet attrs, GraphType graphType) {
         super(context, attrs);
 
         series = new GraphWidgetDataSeries();
+        XYSeriesFormatter formatter = null;
 
-        BarFormatter formatter = new BarFormatter(Color.argb(100, 0, 200, 0), Color.rgb(0, 80, 0));
-        formatter.getLinePaint().setStrokeWidth(3);
-        formatter.getLinePaint().setStrokeJoin(Paint.Join.ROUND);
+        if (graphType.equals(GraphType.StepGraph)) {
+            StepFormatter stepFormatter = new StepFormatter(Color.argb(100, 0, 200, 0), Color.rgb(0, 80, 0));
+            stepFormatter.getLinePaint().setStrokeWidth(3);
+            stepFormatter.getLinePaint().setStrokeJoin(Paint.Join.ROUND);
+
+            formatter = stepFormatter;
+        } else if(graphType.equals(GraphType.BarGraph)) {
+            BarFormatter barFormatter = new BarFormatter(Color.argb(100, 0, 200, 0), Color.rgb(0, 80, 0));
+            barFormatter.getLinePaint().setStrokeWidth(3);
+            barFormatter.getLinePaint().setStrokeJoin(Paint.Join.ROUND);
+
+            formatter = barFormatter;
+        } else if(graphType.equals(GraphType.LineGraph)) {
+            LineAndPointFormatter lineFormatter = new LineAndPointFormatter(Color.rgb(0, 0, 200), null, null, null);
+            lineFormatter.getLinePaint().setStrokeWidth(3);
+            lineFormatter.getLinePaint().setStrokeJoin(Paint.Join.ROUND);
+
+            formatter = lineFormatter;
+        }
+
 
         setDomainStepMode(XYStepMode.SUBDIVIDE);
         setDomainStepValue(5);
@@ -107,8 +134,8 @@ public class BarGraphWidget extends XYPlot implements InputDataWidget {
         this.addSeries(series, formatter);
     }
 
-    public BarGraphWidget(Context context) {
-        this(context, null);
+    public GraphWidget(Context context, GraphType type) {
+        this(context, null, type);
     }
 
     @Override

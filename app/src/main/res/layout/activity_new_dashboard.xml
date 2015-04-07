@@ -27,30 +27,25 @@
             android:layout_height="wrap_content"
             android:text="Thermometer"/>
         <Button
-            android:id="@+id/button_elem1"
+            android:id="@+id/add_step_graph_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Get step graph"/>
+            android:text="Step graph"/>
         <Button
-            android:id="@+id/button_elem2"
+            android:id="@+id/add_bar_graph_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Get bar graph"/>
+            android:text="Bar graph"/>
         <Button
-            android:id="@+id/button_elem3"
+            android:id="@+id/add_line_graph_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Get line and point graph"/>
+            android:text="Line and point graph"/>
         <Button
-            android:id="@+id/button_elem4"
+            android:id="@+id/add_simple_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Add a button"/>
-        <Button
-            android:id="@+id/button_elem5"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Add edit text"/>
+            android:text="Button"/>
 
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>
