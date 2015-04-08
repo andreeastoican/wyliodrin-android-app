@@ -2,6 +2,7 @@ package com.wyliodrin.mobileapp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -19,12 +20,8 @@ import com.wyliodrin.mobileapp.widgets.Thermometer;
 import java.util.Random;
 
 public class NewDashboardActivity extends FragmentActivity {
-
-    Thread thread_bar;
-    Thread thread_step;
-    int x_bar_graph = 0;
-    int x_step_graph = 0;
     Random rand = new Random();
+    public SharedPreferences shPref;
 
     private DrawerLayout mDrawerLayout;
 
@@ -57,6 +54,8 @@ public class NewDashboardActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_dashboard);
+
+        shPref = getSharedPreferences("dashboard", MODE_PRIVATE);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -131,99 +130,14 @@ public class NewDashboardActivity extends FragmentActivity {
     }
 
     public void addStepGraph() {
-        final GraphWidget graph = new GraphWidget(NewDashboardActivity.this, GraphWidget.GraphType.StepGraph);
-
-        graph.setLayoutParams(new LinearLayout.LayoutParams(200, 300));
-        graph.setOnLongClickListener(widgetLongClick);
-
-        LinearLayout layout = (LinearLayout) findViewById(R.id.widgetsContainer);
-        layout.addView(graph);
-
-        thread_step = new Thread() {
-            @Override
-            public void run() {
-                super.run();
-
-                x_step_graph = 0;
-                while(true) {
-                    x_step_graph++;
-                    double y = rand.nextDouble();
-
-                    graph.addPoint(x_step_graph, y);
-
-                    try {
-                        sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-        thread_step.start();
+        GraphWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, GraphWidget.GraphType.StepGraph);
     }
 
     public void addBarGraph() {
-
-        final GraphWidget graph = new GraphWidget(this, GraphWidget.GraphType.BarGraph);
-
-        graph.setLayoutParams(new LinearLayout.LayoutParams(200, 300));
-        graph.setOnLongClickListener(widgetLongClick);
-
-        LinearLayout layout = (LinearLayout) findViewById(R.id.widgetsContainer);
-        layout.addView(graph);
-
-        thread_bar = new Thread() {
-            @Override
-            public void run() {
-                super.run();
-
-                while(true) {
-                    x_bar_graph++;
-                    double y = rand.nextDouble();
-
-                    graph.addPoint(x_bar_graph, y);
-
-                    try {
-                        sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-        thread_bar.start();
-
+        GraphWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, GraphWidget.GraphType.BarGraph);
     }
 
     public void addLineGraph() {
-        final GraphWidget graph = new GraphWidget(this, GraphWidget.GraphType.LineGraph);
-
-        graph.setLayoutParams(new LinearLayout.LayoutParams(200, 300));
-        graph.setOnLongClickListener(widgetLongClick);
-
-        LinearLayout layout = (LinearLayout) findViewById(R.id.widgetsContainer);
-        layout.addView(graph);
-
-        thread_bar = new Thread() {
-            @Override
-            public void run() {
-                super.run();
-
-                while(true) {
-                    x_bar_graph++;
-                    double y = rand.nextDouble();
-
-                    graph.addPoint(x_bar_graph, y);
-
-                    try {
-                        sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-        thread_bar.start();
-
+        GraphWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, GraphWidget.GraphType.LineGraph);
     }
 }

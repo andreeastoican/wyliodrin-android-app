@@ -72,12 +72,12 @@ public class SimpleButton {
                                 heightEditText.setError("Height is required");
                         }
 
-                        EditText minDegreeEditText = (EditText) alert_dialog_xml.findViewById(R.id.text);
-                        if (minDegreeEditText != null) {
-                            text = minDegreeEditText.getText().toString();
+                        EditText textButton = (EditText) alert_dialog_xml.findViewById(R.id.text);
+                        if (textButton != null) {
+                            text = textButton.getText().toString();
 
                             if (text.isEmpty())
-                                minDegreeEditText.setError("Text button is required");
+                                textButton.setError("Text button is required");
                         }
 
                         if (!width.isEmpty() && !height.isEmpty() && !text.isEmpty()) {

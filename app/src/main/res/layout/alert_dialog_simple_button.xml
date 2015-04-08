@@ -16,6 +16,35 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:weightSum="1">
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight=".5"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:text="Text button:" />
+
+            <EditText
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:maxLength="20" >
+                <requestFocus />
+            </EditText>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:weightSum="1">
 
             <TextView
                 android:layout_width="fill_parent"
@@ -24,9 +53,7 @@
                 android:textColor="@color/black"
                 android:gravity="center"
                 android:textSize="20sp"
-                android:text="Width:" >
-                <requestFocus />
-            </TextView>
+                android:text="Width:" />
 
             <EditText
                 android:id="@+id/width"
@@ -67,31 +94,7 @@
         </LinearLayout>
 
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:weightSum="1">
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight=".5"
-                android:textColor="@color/black"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:text="Text button:" />
 
-            <EditText
-                android:id="@+id/text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:layout_weight=".5"
-                android:gravity="center"
-                android:maxLength="20"/>
-        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

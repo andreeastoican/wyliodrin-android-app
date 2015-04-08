@@ -16,6 +16,35 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:weightSum="1">
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight=".5"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:text="Text button:" />
+
+            <EditText
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:maxLength="20" >
+                <requestFocus />
+            </EditText>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:weightSum="1">
 
             <TextView
                 android:layout_width="fill_parent"
@@ -27,17 +56,15 @@
                 android:text="Width:" />
 
             <EditText
-                android:id="@+id/thermometer_width"
+                android:id="@+id/width"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:layout_weight=".5"
                 android:gravity="center"
-                android:maxLength="4" >
-                <requestFocus />
-            </EditText>
+                android:maxLength="4"/>
 
-            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -57,7 +84,7 @@
 
             <EditText
 
-                android:id="@+id/thermometer_height"
+                android:id="@+id/height"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -66,57 +93,5 @@
                 android:maxLength="4" />
         </LinearLayout>
 
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:weightSum="1">
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight=".5"
-                android:textColor="@color/black"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:text="Min degree:" />
-
-            <EditText
-                android:id="@+id/thermometer_min"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:layout_weight=".5"
-                android:gravity="center"
-                android:maxLength="4"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:weightSum="1">
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight=".5"
-                android:textColor="@color/black"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:text="Max degree:" />
-
-            <EditText
-                android:id="@+id/thermometer_max"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:layout_weight=".5"
-                android:gravity="center"
-                android:maxLength="4" />
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>
