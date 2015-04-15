@@ -20,6 +20,10 @@ import android.widget.TextView;
 import com.wyliodrin.mobileapp.R;
 import com.wyliodrin.mobileapp.api.WylioMessage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.StringWriter;
 import java.util.ArrayList;
 
 /**
@@ -126,7 +130,7 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
 
     }
 
-    public static void showAddDialog(final Activity activity, final LinearLayout layout, final OnLongClickListener onLongClick) {
+    public static void showAddDialog(final Activity activity, final LinearLayout layout, final OnLongClickListener onLongClick, final ArrayList<Widget> objects) {
         // set the parameters
 
         ScrollView scroll = new ScrollView(activity);
@@ -206,6 +210,7 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
                             thermometer.setLimits(Float.parseFloat(minDegree), Float.parseFloat(maxDegree));
 
                             layout.addView(thermometer);
+                            objects.add(thermometer);
 
                             thermometer.setOnLongClickListener(onLongClick);
 
@@ -219,4 +224,18 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
         alertDialog.show();
     }
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject obj=new JSONObject();
+        try {
+            obj.put("name","thermometer");
+            obj.put("width", width);
+            obj.put("height", height);
+            obj.put("minDegree", min);
+            obj.put("maxDegree", max);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
 }

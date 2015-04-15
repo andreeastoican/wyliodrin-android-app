@@ -11,5 +11,5 @@
     <string name="title_activity_bar_graph">BarGraphActivity</string>
     <string name="title_activity_drower">DrowerActivity</string>
     <string name="title_activity_main">MainActivity</string>
-
+    <string name="save_board">Save</string>
 </resources>

@@ -29,6 +29,8 @@ import com.wyliodrin.mobileapp.R;
 import com.wyliodrin.mobileapp.api.WylioMessage;
 
 
+import org.json.JSONObject;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,11 @@ import java.util.Random;
  * Created by andreea on 12/10/14.
  */
 public class GraphWidget extends XYPlot implements InputDataWidget {
+
+    @Override
+    public JSONObject toJson() {
+        return null;
+    }
 
     public static enum GraphType {
         StepGraph,
