@@ -7,22 +7,26 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.wyliodrin.mobileapp.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends ActionBarActivity {
 
     public SharedPreferences shPref;
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        shPref = getSharedPreferences("dashboard", MODE_PRIVATE);
 
         ImageButton addButton = (ImageButton) findViewById(R.id.add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -33,30 +37,60 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        ListView dashboardList = (ListView) findViewById(R.id.dashboard_list);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        shPref = getSharedPreferences("dashboard", MODE_PRIVATE);
 
-        /*for (Person contact : contactsList) {
-            adapter.add(contact.getUser() + " (" + contact.getNumber() + ")");
-        }
-
-        frientsList.setAdapter(adapter);
-
-        frientsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(ChatActivity.this, MessengerActivity.class);
-
-                Person person = contactsList.get(i);
-                intent.putExtra("name", person.getUser());
-                intent.putExtra("number", person.getNumber());
-
-                startActivityForResult(intent, 0);
-            }
-        });*/
-
+        updateBoardsList();
     }
 
+    private void updateBoardsList() {
+        ListView dashboardList = (ListView) findViewById(R.id.dashboard_list);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+
+        String boards = shPref.getString("boards", "");
+        JSONArray boardList = null;
+        try {
+            boardList = new JSONArray(boards);
+        } catch (JSONException e) {
+            boardList = new JSONArray();
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < boardList.length(); i++) {
+            try {
+                JSONObject board = boardList.getJSONObject(i);
+                adapter.add(board.optString("name", ""));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        dashboardList.setAdapter(adapter);
+
+        final JSONArray finalBoardList = boardList;
+        dashboardList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MainActivity.this, NewDashboardActivity.class);
+
+                try {
+                    JSONObject board = finalBoardList.getJSONObject(i);
+                    intent.putExtra("board", board.toString());
+                    intent.putExtra("board_id", i);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        updateBoardsList();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

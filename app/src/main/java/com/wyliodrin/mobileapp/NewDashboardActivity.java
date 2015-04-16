@@ -2,6 +2,7 @@ package com.wyliodrin.mobileapp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,8 +16,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wyliodrin.mobileapp.api.WylioBoard;
 import com.wyliodrin.mobileapp.widgets.SimpleButton;
 import com.wyliodrin.mobileapp.widgets.GraphWidget;
 import com.wyliodrin.mobileapp.widgets.Thermometer;
@@ -42,6 +45,15 @@ public class NewDashboardActivity extends FragmentActivity {
     private Button addSimpleButton;
     private Button addThermometerButton;
 
+    private JSONObject currentBoard;
+    private int boardId = -1;
+
+    // Simple Message
+//    final WylioBoard board = new WylioBoard("250a7843-9eda-4a92-942d-dba0dfe3b0a0b836cb66-0ad1-46d6-b6ba-458781a38ca08ced6536-0a8a-49b0-bbf3-b072631d0ccf", "andreea.stoican.5_random@wyliodrin.com");
+
+    //final WylioBoard board = new WylioBoard("b883db27-a072-4481-aff2-2e5297d781c80a6febc0-6263-4118-9eeb-2fbb0530585b46a813ed-7eda-49b4-be5e-4a319c6c0da13a155792-fc2e-413f-82d9-9728ca5b829a");
+
+
     private View.OnLongClickListener widgetLongClick = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(final View view) {
@@ -52,8 +64,7 @@ public class NewDashboardActivity extends FragmentActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             LinearLayout layout = (LinearLayout) findViewById(R.id.widgetsContainer);
                             layout.removeView(view);
-
-                            // TODO remove from list
+                            objects.remove(view);
                         }
                     }).setNegativeButton("No", null).show();
 
@@ -84,7 +95,7 @@ public class NewDashboardActivity extends FragmentActivity {
         addStepGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GraphWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, GraphWidget.GraphType.StepGraph);
+                GraphWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, GraphWidget.GraphType.StepGraph, objects);
                 mDrawerLayout.closeDrawers();
             }
         });
@@ -93,7 +104,7 @@ public class NewDashboardActivity extends FragmentActivity {
         addBarGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GraphWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, GraphWidget.GraphType.BarGraph);
+                GraphWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, GraphWidget.GraphType.BarGraph,objects);
                 mDrawerLayout.closeDrawers();
             }
         });
@@ -102,7 +113,7 @@ public class NewDashboardActivity extends FragmentActivity {
         addLineGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GraphWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, GraphWidget.GraphType.LineGraph);
+                GraphWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, GraphWidget.GraphType.LineGraph, objects);
                 mDrawerLayout.closeDrawers();
             }
         });
@@ -118,15 +129,34 @@ public class NewDashboardActivity extends FragmentActivity {
             }
         });
 
-        Fragment fragment = new MainFragment();
-        if (fragment != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, fragment).commit();
+        Intent intent = getIntent();
+        String boardString = intent.getStringExtra("board");
+        boardId = intent.getIntExtra("board_id", -1);
 
-            mDrawerLayout.closeDrawer((LinearLayout) findViewById(R.id.drawerLayout));
+        if(boardString != null && boardId != -1) {
+            try {
+                currentBoard = new JSONObject(boardString);
+
+                JSONArray widgets = currentBoard.getJSONArray("objects");
+
+                for (int i = 0; i < widgets.length(); i++) {
+                    JSONObject widget = widgets.getJSONObject(i);
+                    switch (widget.optInt("type", Widget.TYPE_NONE)) {
+                        case Widget.TYPE_THERMOMETER:
+                            Thermometer.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, objects,
+                                    widget.optInt("width", 300), widget.optInt("height", 200),
+                                    widget.optDouble("maxDegree", 70), widget.optDouble("minDegree", -20));
+                            break;
+                        case Widget.TYPE_GRAPH:
+
+                    }
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-
     }
 
     public void saveBoard(String name) {
@@ -153,7 +183,15 @@ public class NewDashboardActivity extends FragmentActivity {
             list = new JSONArray();
             e.printStackTrace();
         }
-        list.put(obj);
+
+        if(boardId != -1) {
+            try {
+                list.put(boardId, obj);
+            } catch (JSONException e) {
+            }
+        } else {
+            list.put(obj);
+        }
         shPref.edit().putString("boards", list.toString()).commit();
     }
 
@@ -175,6 +213,12 @@ public class NewDashboardActivity extends FragmentActivity {
 
                 LayoutInflater inflater = LayoutInflater.from(NewDashboardActivity.this);
                 final View alert_dialog_xml = inflater.inflate(R.layout.alert_dialog_dashboard_name, null);
+                EditText nameEditText = (EditText) alert_dialog_xml.findViewById(R.id.name);
+
+                // daca se salveaza un bord existent
+                if (boardId != -1) {
+                    nameEditText.setText(currentBoard.optString("name"), TextView.BufferType.EDITABLE);
+                }
                 alertDialogBuilder.setView(alert_dialog_xml);
 
                 alertDialogBuilder
@@ -198,6 +242,7 @@ public class NewDashboardActivity extends FragmentActivity {
                             public void onClick(View v) {
 
                                 EditText nameEditText = (EditText) alert_dialog_xml.findViewById(R.id.name);
+
                                 String name = null;
                                 if (nameEditText != null) {
                                     name = nameEditText.getText().toString();

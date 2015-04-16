@@ -29,6 +29,7 @@ import com.wyliodrin.mobileapp.R;
 import com.wyliodrin.mobileapp.api.WylioMessage;
 
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
@@ -41,10 +42,9 @@ import java.util.Random;
  */
 public class GraphWidget extends XYPlot implements InputDataWidget {
 
-    @Override
-    public JSONObject toJson() {
-        return null;
-    }
+    private String title;
+    private int width;
+    private int height;
 
     public static enum GraphType {
         StepGraph,
@@ -152,7 +152,13 @@ public class GraphWidget extends XYPlot implements InputDataWidget {
         this.addSeries(series, formatter);
     }
 
-    public static void showAddDialog(final Activity activity, final LinearLayout layout, final View.OnLongClickListener onLongClick, final GraphType graphType) {
+    private void setProperties(String title, int width, int height) {
+        this.title = title;
+        this.width = width;
+        this.height = height;
+    }
+
+    public static void showAddDialog(final Activity activity, final LinearLayout layout, final View.OnLongClickListener onLongClick, final GraphType graphType, final ArrayList<Widget> objects) {
         // set the parameters
 
         ScrollView scroll = new ScrollView(activity);
@@ -215,37 +221,11 @@ public class GraphWidget extends XYPlot implements InputDataWidget {
                         }
 
                         if (!width.isEmpty() && !height.isEmpty() && !title.isEmpty()) {
-                            final GraphWidget graph = new GraphWidget(activity, graphType);
 
-                            graph.setLayoutParams(new LinearLayout.LayoutParams(Integer.parseInt(width), Integer.parseInt(height)));
-                            graph.setOnLongClickListener(onLongClick);
-                            graph.setTitle(title);
-
-                            LinearLayout layout = (LinearLayout) activity.findViewById(R.id.widgetsContainer);
-                            layout.addView(graph);
-
+                            addToBoard(activity, layout, onLongClick, objects,
+                                    Integer.parseInt(width), Integer.parseInt(height),
+                                    title, graphType);
                             alertDialog.dismiss();
-
-                            Thread thread_bar = new Thread() {
-                                @Override
-                                public void run() {
-                                    super.run();
-
-                                    while(true) {
-                                        x_bar_graph++;
-                                        double y = new Random().nextDouble();
-
-                                        graph.addPoint(x_bar_graph, y);
-
-                                        try {
-                                            sleep(1000);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-                            };
-                            thread_bar.start();
                         }
                     }
                 });
@@ -255,6 +235,39 @@ public class GraphWidget extends XYPlot implements InputDataWidget {
         alertDialog.show();
     }
 
+    public static void addToBoard(Activity activity, LinearLayout layout, OnLongClickListener onLongClick, ArrayList<Widget> objects,
+                                  int width, int height, String title, GraphType graphType) {
+        // add the thermometer
+        final GraphWidget graph = new GraphWidget(activity, graphType);
+
+        graph.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+        graph.setOnLongClickListener(onLongClick);
+        graph.setProperties(title, width, height);
+        graph.setTitle(title);
+
+        layout.addView(graph);
+
+        Thread thread_bar = new Thread() {
+            @Override
+            public void run() {
+                super.run();
+
+                while(true) {
+                    x_bar_graph++;
+                    double y = new Random().nextDouble();
+
+                    graph.addPoint(x_bar_graph, y);
+
+                    try {
+                        sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        thread_bar.start();
+    }
 
     public GraphWidget(Context context, GraphType type) {
         this(context, null, type);
@@ -267,6 +280,20 @@ public class GraphWidget extends XYPlot implements InputDataWidget {
 
     public void addPoint(double x, double y) {
         series.addPoint(x, y);
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject obj=new JSONObject();
+        try {
+            obj.put("type", TYPE_THERMOMETER);
+            obj.put("title", title);
+            obj.put("width", width);
+            obj.put("height", height);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return obj;
     }
 
 }

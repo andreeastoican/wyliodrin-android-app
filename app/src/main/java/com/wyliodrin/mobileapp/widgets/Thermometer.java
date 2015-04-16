@@ -31,7 +31,8 @@ import java.util.ArrayList;
  */
 public class Thermometer extends RelativeLayout implements InputDataWidget {
 
-    private int width, height;
+    private int width;
+    private int height;
 
     private double min;
     private double max;
@@ -203,16 +204,9 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
 
                         if (!width.isEmpty() && !height.isEmpty() && !minDegree.isEmpty() && !maxDegree.isEmpty()) {
 
-                            // add the thermometer
-                            Thermometer thermometer = new Thermometer(activity);
-                            thermometer.setLayoutParams(new LinearLayout.LayoutParams(Integer.parseInt(width), Integer.parseInt(height)));
-                            thermometer.setSize(Integer.parseInt(width), Integer.parseInt(height));
-                            thermometer.setLimits(Float.parseFloat(minDegree), Float.parseFloat(maxDegree));
-
-                            layout.addView(thermometer);
-                            objects.add(thermometer);
-
-                            thermometer.setOnLongClickListener(onLongClick);
+                            addToBoard(activity, layout, onLongClick, objects,
+                                    Integer.parseInt(width), Integer.parseInt(height),
+                                    Float.parseFloat(maxDegree), Float.parseFloat(minDegree));
 
                             alertDialog.dismiss();
                         }
@@ -224,11 +218,25 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
         alertDialog.show();
     }
 
+    public static void addToBoard(Activity activity, LinearLayout layout, OnLongClickListener onLongClick, ArrayList<Widget> objects,
+                             int width, int height, double maxDegree, double minDegree) {
+        // add the thermometer
+        Thermometer thermometer = new Thermometer(activity);
+        thermometer.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+        thermometer.setSize(width, height);
+        thermometer.setLimits(minDegree, maxDegree);
+
+        layout.addView(thermometer);
+        objects.add(thermometer);
+
+        thermometer.setOnLongClickListener(onLongClick);
+    }
+
     @Override
     public JSONObject toJson() {
         JSONObject obj=new JSONObject();
         try {
-            obj.put("name","thermometer");
+            obj.put("type", TYPE_THERMOMETER);
             obj.put("width", width);
             obj.put("height", height);
             obj.put("minDegree", min);
