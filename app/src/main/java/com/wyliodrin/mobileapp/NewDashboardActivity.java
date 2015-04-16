@@ -86,7 +86,8 @@ public class NewDashboardActivity extends FragmentActivity {
         addThermometerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Thermometer.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, objects);
+                Thermometer.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer),
+                        widgetLongClick, objects);
                 mDrawerLayout.closeDrawers();
             }
         });
@@ -95,7 +96,8 @@ public class NewDashboardActivity extends FragmentActivity {
         addStepGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GraphWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, GraphWidget.GraphType.StepGraph, objects);
+                GraphWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer),
+                        widgetLongClick, GraphWidget.GraphType.StepGraph, objects);
                 mDrawerLayout.closeDrawers();
             }
         });
@@ -104,7 +106,8 @@ public class NewDashboardActivity extends FragmentActivity {
         addBarGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GraphWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, GraphWidget.GraphType.BarGraph,objects);
+                GraphWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer),
+                        widgetLongClick, GraphWidget.GraphType.BarGraph,objects);
                 mDrawerLayout.closeDrawers();
             }
         });
@@ -113,7 +116,8 @@ public class NewDashboardActivity extends FragmentActivity {
         addLineGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GraphWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, GraphWidget.GraphType.LineGraph, objects);
+                GraphWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer),
+                        widgetLongClick, GraphWidget.GraphType.LineGraph, objects);
                 mDrawerLayout.closeDrawers();
             }
         });
@@ -123,7 +127,8 @@ public class NewDashboardActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
 
-                SimpleButton.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick);
+                SimpleButton.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer),
+                        widgetLongClick, objects);
                 mDrawerLayout.closeDrawers();
 
             }
@@ -144,11 +149,26 @@ public class NewDashboardActivity extends FragmentActivity {
                     switch (widget.optInt("type", Widget.TYPE_NONE)) {
                         case Widget.TYPE_THERMOMETER:
                             Thermometer.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, objects,
-                                    widget.optInt("width", 300), widget.optInt("height", 200),
+                                    widget.optInt("width", 200), widget.optInt("height", 300),
                                     widget.optDouble("maxDegree", 70), widget.optDouble("minDegree", -20));
                             break;
                         case Widget.TYPE_GRAPH:
+                            GraphWidget.GraphType type = null;
+                            if (widget.opt("graph_type").equals("StepGraph")) {
+                                type = GraphWidget.GraphType.StepGraph;
+                            } else if (widget.opt("graph_type").equals("BarGraph")) {
+                                type = GraphWidget.GraphType.BarGraph;
+                            } else if (widget.opt("graph_type").equals("LineGraph")) {
+                                type = GraphWidget.GraphType.LineGraph;
+                            }
 
+                            GraphWidget.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer),widgetLongClick,
+                                    objects, widget.optInt("width", 200),widget.optInt("height", 300), widget.optString("title", "Step"),
+                                    type);
+                            break;
+                        case Widget.TYPE_BUTTON:
+                            SimpleButton.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer) ,widgetLongClick,
+                                    objects, widget.optInt("width"), widget.optInt("height"), widget.optString("text_button"));
                     }
                 }
 

@@ -45,6 +45,7 @@ public class GraphWidget extends XYPlot implements InputDataWidget {
     private String title;
     private int width;
     private int height;
+    private GraphType currentType;
 
     public static enum GraphType {
         StepGraph,
@@ -152,14 +153,15 @@ public class GraphWidget extends XYPlot implements InputDataWidget {
         this.addSeries(series, formatter);
     }
 
-    private void setProperties(String title, int width, int height) {
+    private void setProperties(String title, int width, int height, GraphType currentType) {
         this.title = title;
         this.width = width;
         this.height = height;
+        this.currentType = currentType;
     }
 
-    public static void showAddDialog(final Activity activity, final LinearLayout layout, final View.OnLongClickListener onLongClick, final GraphType graphType, final ArrayList<Widget> objects) {
-        // set the parameters
+    public static void showAddDialog(final Activity activity, final LinearLayout layout, final View.OnLongClickListener onLongClick,
+                                     final GraphType graphType, final ArrayList<Widget> objects) {
 
         ScrollView scroll = new ScrollView(activity);
         scroll.setBackgroundColor(android.R.color.transparent);
@@ -242,10 +244,11 @@ public class GraphWidget extends XYPlot implements InputDataWidget {
 
         graph.setLayoutParams(new LinearLayout.LayoutParams(width, height));
         graph.setOnLongClickListener(onLongClick);
-        graph.setProperties(title, width, height);
+        graph.setProperties(title, width, height, graphType);
         graph.setTitle(title);
 
         layout.addView(graph);
+        objects.add(graph);
 
         Thread thread_bar = new Thread() {
             @Override
@@ -286,7 +289,8 @@ public class GraphWidget extends XYPlot implements InputDataWidget {
     public JSONObject toJson() {
         JSONObject obj=new JSONObject();
         try {
-            obj.put("type", TYPE_THERMOMETER);
+            obj.put("type", TYPE_GRAPH);
+            obj.put("graph_type", currentType);
             obj.put("title", title);
             obj.put("width", width);
             obj.put("height", height);

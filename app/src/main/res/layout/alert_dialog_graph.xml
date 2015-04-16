@@ -23,7 +23,7 @@
                 android:textColor="@color/black"
                 android:gravity="center"
                 android:textSize="20sp"
-                android:text="Text button:" />
+                android:text="Title:" />
 
             <EditText
                 android:id="@+id/title"
@@ -83,7 +83,6 @@
                 android:text="Height:" />
 
             <EditText
-
                 android:id="@+id/height"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

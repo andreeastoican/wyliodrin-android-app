@@ -2,6 +2,7 @@ package com.wyliodrin.mobileapp.widgets;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,19 +10,34 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.wyliodrin.mobileapp.R;
+import com.wyliodrin.mobileapp.api.WylioMessage;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by Andreea Stoican on 07.04.2015.
  */
-public class SimpleButton {
+public class SimpleButton extends RelativeLayout implements InputDataWidget {
 
-    public static void showAddDialog(final Activity activity, final LinearLayout layout, final View.OnLongClickListener onLongClick) {
+    private String textButton;
+    private int width;
+    private int height;
+
+    public SimpleButton(Context context) {
+        super(context);
+    }
+
+    public static void showAddDialog(final Activity activity, final LinearLayout layout, final View.OnLongClickListener onLongClick, final ArrayList<Widget> objects) {
         // set the parameters
 
-        ScrollView scroll = new ScrollView(activity);
+        final ScrollView scroll = new ScrollView(activity);
         scroll.setBackgroundColor(android.R.color.transparent);
         scroll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
@@ -82,14 +98,7 @@ public class SimpleButton {
 
                         if (!width.isEmpty() && !height.isEmpty() && !text.isEmpty()) {
 
-                            Button button = new Button(activity);
-                            button.setText(text);
-
-                            button.setLayoutParams(new LinearLayout.LayoutParams(Integer.parseInt(width), Integer.parseInt(height)));
-                            button.setOnLongClickListener(onLongClick);
-
-                            LinearLayout layout = (LinearLayout) activity.findViewById(R.id.widgetsContainer);
-                            layout.addView(button);
+                            addToBoard(activity, layout, onLongClick, objects, Integer.parseInt(width), Integer.parseInt(height), text);
 
                             alertDialog.dismiss();
                         }
@@ -100,5 +109,40 @@ public class SimpleButton {
 
         alertDialog.show();
     }
+
+    public static void addToBoard(Activity activity, LinearLayout layout, OnLongClickListener onLongClick, ArrayList<Widget> objects,
+                                  int width, int height, String textButton) {
+
+        Button button = new Button(activity);
+        button.setText(textButton);
+
+        button.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+        button.setOnLongClickListener(onLongClick);
+
+        SimpleButton simpleButton = new SimpleButton(activity);
+        simpleButton.width = width;
+        simpleButton.height = height;
+        simpleButton.textButton = textButton;
+
+        layout.addView(button);
+        objects.add((Widget) simpleButton);
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject obj=new JSONObject();
+        try {
+            obj.put("type", TYPE_BUTTON);
+            obj.put("width", width);
+            obj.put("height", height);
+            obj.put("text_button", textButton);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
+
+    @Override
+    public void addData(WylioMessage message) {}
 
 }
