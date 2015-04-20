@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.wyliodrin.mobileapp.api.WylioBoard;
 import com.wyliodrin.mobileapp.widgets.SimpleButton;
 import com.wyliodrin.mobileapp.widgets.GraphWidget;
+import com.wyliodrin.mobileapp.widgets.SimpleToggleButton;
 import com.wyliodrin.mobileapp.widgets.Thermometer;
 import com.wyliodrin.mobileapp.widgets.Widget;
 
@@ -43,6 +44,7 @@ public class NewDashboardActivity extends FragmentActivity {
     private Button addLineGraphButton;
     private Button addBarGraphButton;
     private Button addSimpleButton;
+    private Button addSimpleToggleButton;
     private Button addThermometerButton;
 
     private JSONObject currentBoard;
@@ -134,6 +136,18 @@ public class NewDashboardActivity extends FragmentActivity {
             }
         });
 
+        addSimpleToggleButton = (Button) findViewById(R.id.add_simple_toggle_button);
+        addSimpleToggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SimpleToggleButton.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer),
+                        widgetLongClick, objects);
+                mDrawerLayout.closeDrawers();
+
+            }
+        });
+
         Intent intent = getIntent();
         String boardString = intent.getStringExtra("board");
         boardId = intent.getIntExtra("board_id", -1);
@@ -169,6 +183,11 @@ public class NewDashboardActivity extends FragmentActivity {
                         case Widget.TYPE_BUTTON:
                             SimpleButton.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer) ,widgetLongClick,
                                     objects, widget.optInt("width"), widget.optInt("height"), widget.optString("text_button"));
+                            break;
+                        case Widget.TYPE_TOGGLE_BUTTON:
+                            SimpleToggleButton.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer) ,widgetLongClick,
+                                    objects, widget.optInt("width"), widget.optInt("height"), widget.optString("text_button_on"), widget.optString("text_button_off"));
+                            break;
                     }
                 }
 

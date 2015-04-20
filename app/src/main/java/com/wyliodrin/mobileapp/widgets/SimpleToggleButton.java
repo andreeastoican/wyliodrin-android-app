@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.ToggleButton;
 
 import com.wyliodrin.mobileapp.R;
 import com.wyliodrin.mobileapp.api.WylioMessage;
@@ -22,15 +22,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by Andreea Stoican on 07.04.2015.
+ * Created by Andreea Stoican on 20.04.2015.
  */
-public class SimpleButton extends Button implements InputDataWidget {
+public class SimpleToggleButton extends ToggleButton implements InputDataWidget {
 
-    private String textButton;
+    private String textON;
+    private String textOFF;
     private int width;
     private int height;
 
-    public SimpleButton(Context context) {
+    public SimpleToggleButton(Context context) {
         super(context);
     }
 
@@ -46,7 +47,7 @@ public class SimpleButton extends Button implements InputDataWidget {
         alertDialogBuilder.setTitle("Choose the button properties");
 
         LayoutInflater inflater= LayoutInflater.from(activity);
-        final View alert_dialog_xml =inflater.inflate(R.layout.alert_dialog_simple_button, null);
+        final View alert_dialog_xml =inflater.inflate(R.layout.alert_dialog_simple_toggle_button, null);
         alertDialogBuilder.setView(alert_dialog_xml);
 
         alertDialogBuilder.setPositiveButton("Done", null);
@@ -70,7 +71,8 @@ public class SimpleButton extends Button implements InputDataWidget {
                     public void onClick(View v) {
                         String width = "";
                         String height = "";
-                        String text = "";
+                        String textOn = "";
+                        String textOff = "";
 
                         EditText widthEditText = (EditText) alert_dialog_xml.findViewById(R.id.width);
                         if (widthEditText != null) {
@@ -88,17 +90,25 @@ public class SimpleButton extends Button implements InputDataWidget {
                                 heightEditText.setError("Height is required");
                         }
 
-                        EditText textButton = (EditText) alert_dialog_xml.findViewById(R.id.text);
-                        if (textButton != null) {
-                            text = textButton.getText().toString();
+                        EditText textOnButtOn = (EditText) alert_dialog_xml.findViewById(R.id.textON);
+                        if (textOnButtOn != null) {
+                            textOn = textOnButtOn.getText().toString();
 
-                            if (text.isEmpty())
-                                textButton.setError("Text button is required");
+                            if (textOn.isEmpty())
+                                textOnButtOn.setError("Text button on is required");
                         }
 
-                        if (!width.isEmpty() && !height.isEmpty() && !text.isEmpty()) {
+                        EditText textOnButtOff = (EditText) alert_dialog_xml.findViewById(R.id.textOFF);
+                        if (textOnButtOff != null) {
+                            textOff = textOnButtOff.getText().toString();
 
-                            addToBoard(activity, layout, onLongClick, objects, Integer.parseInt(width), Integer.parseInt(height), text);
+                            if (textOff.isEmpty())
+                                textOnButtOff.setError("Text button off is required");
+                        }
+
+                        if (!width.isEmpty() && !height.isEmpty() && !textOn.isEmpty() && !textOff.isEmpty()) {
+
+                            addToBoard(activity, layout, onLongClick, objects, Integer.parseInt(width), Integer.parseInt(height), textOn, textOff);
 
                             alertDialog.dismiss();
                         }
@@ -111,38 +121,41 @@ public class SimpleButton extends Button implements InputDataWidget {
     }
 
     public static void addToBoard(Activity activity, LinearLayout layout, OnLongClickListener onLongClick, ArrayList<Widget> objects,
-                                  int width, int height, String buttonText) {
+                                  int width, int height, String buttonTextOn, String buttonTextOff) {
 
-        SimpleButton simpleButton = new SimpleButton(activity);
-        simpleButton.setText(buttonText);
+        SimpleToggleButton simpleToggleButton = new SimpleToggleButton(activity);
+        simpleToggleButton.setTextOn(buttonTextOn);
+        simpleToggleButton.setTextOff(buttonTextOff);
 
-        simpleButton.setLayoutParams(new LinearLayout.LayoutParams(width, height));
-        simpleButton.setOnLongClickListener(onLongClick);
+        simpleToggleButton.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+        simpleToggleButton.setOnLongClickListener(onLongClick);
 
+        simpleToggleButton.width = width;
+        simpleToggleButton.height = height;
+        simpleToggleButton.textON = buttonTextOn;
+        simpleToggleButton.textOFF = buttonTextOff;
 
-        simpleButton.width = width;
-        simpleButton.height = height;
-        simpleButton.textButton = buttonText;
+        layout.addView(simpleToggleButton);
+        objects.add(simpleToggleButton);
+    }
 
-        layout.addView(simpleButton);
-        objects.add(simpleButton);
+    @Override
+    public void addData(WylioMessage message) {
+
     }
 
     @Override
     public JSONObject toJson() {
         JSONObject obj=new JSONObject();
         try {
-            obj.put("type", TYPE_BUTTON);
+            obj.put("type", TYPE_TOGGLE_BUTTON);
             obj.put("width", width);
             obj.put("height", height);
-            obj.put("text_button", textButton);
+            obj.put("text_button_on", textON);
+            obj.put("text_button_off", textOFF);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return obj;
     }
-
-    @Override
-    public void addData(WylioMessage message) {}
-
 }

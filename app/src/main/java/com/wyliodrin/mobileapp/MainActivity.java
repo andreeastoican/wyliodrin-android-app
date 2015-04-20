@@ -1,5 +1,7 @@
 package com.wyliodrin.mobileapp;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
@@ -10,13 +12,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.wyliodrin.mobileapp.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -43,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void updateBoardsList() {
-        ListView dashboardList = (ListView) findViewById(R.id.dashboard_list);
+        final ListView dashboardList = (ListView) findViewById(R.id.dashboard_list);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
         String boards = shPref.getString("boards", "");
@@ -59,11 +69,11 @@ public class MainActivity extends ActionBarActivity {
             try {
                 JSONObject board = boardList.getJSONObject(i);
                 adapter.add(board.optString("name", ""));
+                adapter.notifyDataSetChanged();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        dashboardList.setAdapter(adapter);
 
         final JSONArray finalBoardList = boardList;
         dashboardList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -83,6 +93,46 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+
+        dashboardList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(final AdapterView<?> adapterView, final View view, final int i, long l) {
+
+                new AlertDialog.Builder(MainActivity.this).setTitle("Remove dashboard?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i1) {
+                                Object toRemove = adapter.getItem(i);
+                                adapter.remove((String) toRemove);
+                                adapter.notifyDataSetChanged();
+
+                                String name = "";
+                                List<JSONObject> list = new ArrayList<JSONObject>();
+                                for (int pos = 0; pos < finalBoardList.length(); pos++) {
+                                    try {
+                                        if (pos != i) {
+                                            list.add(finalBoardList.getJSONObject(pos));
+                                        } else {
+                                            name = finalBoardList.getJSONObject(pos).optString("name");
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                JSONArray jsArray = new JSONArray(list);
+                                shPref.edit().putString("boards", jsArray.toString()).commit();
+
+                                Toast.makeText(MainActivity.this, "Dashboard " + name + " removed", Toast.LENGTH_LONG).show();
+                            }
+                        }).setNegativeButton("No", null).show();
+
+                return true;
+            }
+        });
+
+        dashboardList.setAdapter(adapter);
+
     }
 
     @Override

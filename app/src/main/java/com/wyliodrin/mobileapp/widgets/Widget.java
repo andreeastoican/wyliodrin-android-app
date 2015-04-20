@@ -12,6 +12,7 @@ public interface Widget {
     public static final int TYPE_THERMOMETER = 1;
     public static final int TYPE_GRAPH = 2;
     public static final int TYPE_BUTTON = 3;
+    public static final int TYPE_TOGGLE_BUTTON = 4;
 
     public JSONObject toJson();
 }
