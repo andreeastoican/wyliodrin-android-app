@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -102,26 +103,40 @@ public class MainActivity extends ActionBarActivity {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i1) {
+
+                                String boards = shPref.getString("boards", "");
+                                JSONArray boardList = null;
+                                try {
+                                    boardList = new JSONArray(boards);
+                                } catch (JSONException e) {
+                                    boardList = new JSONArray();
+                                    e.printStackTrace();
+                                }
+
+
                                 Object toRemove = adapter.getItem(i);
                                 adapter.remove((String) toRemove);
                                 adapter.notifyDataSetChanged();
 
                                 String name = "";
                                 List<JSONObject> list = new ArrayList<JSONObject>();
-                                for (int pos = 0; pos < finalBoardList.length(); pos++) {
+                                Log.d("befeore for",boardList.length()+"");
+                                for (int pos = 0; pos < boardList.length(); pos++) {
                                     try {
                                         if (pos != i) {
-                                            list.add(finalBoardList.getJSONObject(pos));
+                                            list.add(boardList.getJSONObject(pos));
                                         } else {
-                                            name = finalBoardList.getJSONObject(pos).optString("name");
+                                            name = boardList.getJSONObject(pos).optString("name");
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                 }
 
+                                Log.d("after for", list.size()+"");
                                 JSONArray jsArray = new JSONArray(list);
                                 shPref.edit().putString("boards", jsArray.toString()).commit();
+                                dashboardList.setAdapter(adapter);
 
                                 Toast.makeText(MainActivity.this, "Dashboard " + name + " removed", Toast.LENGTH_LONG).show();
                             }
