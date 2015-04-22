@@ -4,34 +4,84 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.wyliodrin.mobileapp.NewDashboardActivity;
 import com.wyliodrin.mobileapp.R;
 import com.wyliodrin.mobileapp.api.WylioMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.SocketImpl;
 import java.util.ArrayList;
 
 /**
  * Created by Andreea Stoican on 21.04.2015.
  */
-public class SimpleSeekBar extends SeekBar implements InputDataWidget {
+public class SimpleSeekBar extends RelativeLayout implements InputDataWidget {
 
-    private String textButton;
+    private int maxValue;
     private int width;
-    private int height;
 
-    public SimpleSeekBar(Context context) {
-        super(context);
+    public SimpleSeekBar(Context context, int width, int maxValue) {
+        this(context, null, width, maxValue);
+    }
+
+    public SimpleSeekBar(Context context, AttributeSet attrs, int width, int maxValue) {
+        super(context, attrs);
+
+        this.width = width;
+        this.maxValue = maxValue;
+
+        LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.seek_bar_layout, this, true);
+
+        SeekBar seekBar = (SeekBar)findViewById(R.id.seek_bar);
+        seekBar.setMax(maxValue);
+
+        final TextView result = (TextView) findViewById(R.id.result);
+        TextView minValueTextView = (TextView) findViewById(R.id.min);
+        TextView maxValueTextView = (TextView) findViewById(R.id.max);
+
+        result.setText("Value: 0");
+
+        minValueTextView.setText("0");
+
+        maxValueTextView.setText(maxValue+"");
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,
+                                          boolean fromUser) {
+                result.setText("Value:" + progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
     }
 
     public static void showAddDialog(final Activity activity, final LinearLayout layout, final View.OnLongClickListener onLongClick, final ArrayList<Widget> objects) {
@@ -69,8 +119,7 @@ public class SimpleSeekBar extends SeekBar implements InputDataWidget {
 
                     public void onClick(View v) {
                         String width = "";
-                        String height = "";
-                        String text = "";
+                        String maxValue = "";
 
                         EditText widthEditText = (EditText) alert_dialog_xml.findViewById(R.id.width);
                         if (widthEditText != null) {
@@ -80,25 +129,17 @@ public class SimpleSeekBar extends SeekBar implements InputDataWidget {
                                 widthEditText.setError("Width is required");
                         }
 
-                        EditText heightEditText = (EditText) alert_dialog_xml.findViewById(R.id.height);
-                        if (heightEditText != null) {
-                            height = heightEditText.getText().toString();
+                        EditText maxValueButton = (EditText) alert_dialog_xml.findViewById(R.id.max_value);
+                        if (maxValueButton != null) {
+                            maxValue = maxValueButton.getText().toString();
 
-                            if (height.isEmpty())
-                                heightEditText.setError("Height is required");
+                            if (maxValue.isEmpty())
+                                maxValueButton.setError("Max value is required");
                         }
 
-                        EditText textButton = (EditText) alert_dialog_xml.findViewById(R.id.text);
-                        if (textButton != null) {
-                            text = textButton.getText().toString();
+                        if (!width.isEmpty() && !maxValue.isEmpty()) {
 
-                            if (text.isEmpty())
-                                textButton.setError("Text button is required");
-                        }
-
-                        if (!width.isEmpty() && !height.isEmpty() && !text.isEmpty()) {
-
-                            addToBoard(activity, layout, onLongClick, objects, Integer.parseInt(width), Integer.parseInt(height), text);
+                            addToBoard(activity, layout, onLongClick, objects, Integer.parseInt(width), Integer.parseInt(maxValue));
 
                             alertDialog.dismiss();
                         }
@@ -111,21 +152,18 @@ public class SimpleSeekBar extends SeekBar implements InputDataWidget {
     }
 
     public static void addToBoard(Activity activity, LinearLayout layout, OnLongClickListener onLongClick, ArrayList<Widget> objects,
-                                  int width, int height, String buttonText) {
+                                  int width, int max) {
 
-        SimpleSeekBar simpleSeekBar = new SimpleSeekBar(activity);
-        //simpleSeekBar.setText(buttonText);
 
-        simpleSeekBar.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+
+        SimpleSeekBar simpleSeekBar = new SimpleSeekBar(activity, width, max);
+
+        simpleSeekBar.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
         simpleSeekBar.setOnLongClickListener(onLongClick);
 
-
-        simpleSeekBar.width = width;
-        simpleSeekBar.height = height;
-        simpleSeekBar.textButton = buttonText;
+        objects.add(simpleSeekBar);
 
         layout.addView(simpleSeekBar);
-        objects.add(simpleSeekBar);
     }
 
     @Override
@@ -139,11 +177,11 @@ public class SimpleSeekBar extends SeekBar implements InputDataWidget {
         try {
             obj.put("type", TYPE_SEEK_BAR);
             obj.put("width", width);
-            obj.put("height", height);
-            obj.put("text_button", textButton);
+            obj.put("max_value", maxValue);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return obj;
     }
+
 }

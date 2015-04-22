@@ -204,7 +204,7 @@ public class NewDashboardActivity extends FragmentActivity {
                             break;
                         case Widget.TYPE_SEEK_BAR:
                             SimpleSeekBar.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer) ,widgetLongClick,
-                                objects, widget.optInt("width"), widget.optInt("height"), widget.optString("text_button"));
+                                objects, widget.optInt("width"), widget.optInt("max_value"));
                             break;
                     }
                 }
