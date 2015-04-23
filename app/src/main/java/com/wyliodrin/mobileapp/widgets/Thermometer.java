@@ -23,7 +23,6 @@ import com.wyliodrin.mobileapp.api.WylioMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 
 /**

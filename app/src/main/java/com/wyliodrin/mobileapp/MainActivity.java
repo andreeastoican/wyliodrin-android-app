@@ -13,20 +13,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.wyliodrin.mobileapp.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
@@ -58,7 +52,7 @@ public class MainActivity extends ActionBarActivity {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
         String boards = shPref.getString("boards", "");
-        JSONArray boardList = null;
+        JSONArray boardList;
         try {
             boardList = new JSONArray(boards);
         } catch (JSONException e) {
@@ -105,7 +99,7 @@ public class MainActivity extends ActionBarActivity {
                             public void onClick(DialogInterface dialogInterface, int i1) {
 
                                 String boards = shPref.getString("boards", "");
-                                JSONArray boardList = null;
+                                JSONArray boardList;
                                 try {
                                     boardList = new JSONArray(boards);
                                 } catch (JSONException e) {

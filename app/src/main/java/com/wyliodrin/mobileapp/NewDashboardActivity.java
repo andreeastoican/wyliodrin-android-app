@@ -5,9 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.wyliodrin.mobileapp.api.WylioBoard;
 import com.wyliodrin.mobileapp.widgets.SimpleButton;
 import com.wyliodrin.mobileapp.widgets.GraphWidget;
 import com.wyliodrin.mobileapp.widgets.SimpleSeekBar;
@@ -32,22 +29,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class NewDashboardActivity extends FragmentActivity {
-    Random rand = new Random();
     ArrayList<Widget> objects;
     public SharedPreferences shPref;
 
     private DrawerLayout mDrawerLayout;
-
-    private Button addStepGraphButton;
-    private Button addLineGraphButton;
-    private Button addBarGraphButton;
-    private Button addSimpleButton;
-    private Button addSimpleToggleButton;
-    private Button addThermometerButton;
-    private Button addSeekBar;
 
     private JSONObject currentBoard;
     private int boardId = -1;
@@ -86,7 +73,7 @@ public class NewDashboardActivity extends FragmentActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        addThermometerButton = (Button) findViewById(R.id.add_thermometer_button);
+        Button addThermometerButton = (Button) findViewById(R.id.add_thermometer_button);
         addThermometerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,7 +83,7 @@ public class NewDashboardActivity extends FragmentActivity {
             }
         });
 
-        addStepGraphButton = (Button) findViewById(R.id.add_step_graph_button);
+        Button addStepGraphButton = (Button) findViewById(R.id.add_step_graph_button);
         addStepGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,7 +93,7 @@ public class NewDashboardActivity extends FragmentActivity {
             }
         });
 
-        addBarGraphButton = (Button) findViewById(R.id.add_bar_graph_button);
+        Button addBarGraphButton = (Button) findViewById(R.id.add_bar_graph_button);
         addBarGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,7 +103,7 @@ public class NewDashboardActivity extends FragmentActivity {
             }
         });
 
-        addLineGraphButton = (Button) findViewById(R.id.add_line_graph_button);
+        Button addLineGraphButton = (Button) findViewById(R.id.add_line_graph_button);
         addLineGraphButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,7 +113,7 @@ public class NewDashboardActivity extends FragmentActivity {
             }
         });
 
-        addSimpleButton = (Button) findViewById(R.id.add_simple_button);
+        Button addSimpleButton = (Button) findViewById(R.id.add_simple_button);
         addSimpleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,7 +125,7 @@ public class NewDashboardActivity extends FragmentActivity {
             }
         });
 
-        addSimpleToggleButton = (Button) findViewById(R.id.add_simple_toggle_button);
+        Button addSimpleToggleButton = (Button) findViewById(R.id.add_simple_toggle_button);
         addSimpleToggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -150,7 +137,7 @@ public class NewDashboardActivity extends FragmentActivity {
             }
         });
 
-        addSeekBar = (Button) findViewById(R.id.add_simple_seek_bar);
+        Button addSeekBar = (Button) findViewById(R.id.add_simple_seek_bar);
         addSeekBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -233,7 +220,7 @@ public class NewDashboardActivity extends FragmentActivity {
 
         String boards = shPref.getString("boards", "");
 
-        JSONArray list = null;
+        JSONArray list;
         try {
             list = new JSONArray(boards);
         } catch (JSONException e) {

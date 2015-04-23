@@ -122,7 +122,6 @@ public class GraphWidget extends XYPlot implements InputDataWidget {
             LineAndPointFormatter lineFormatter = new LineAndPointFormatter(Color.rgb(0, 0, 200), null, null, null);
             lineFormatter.getLinePaint().setStrokeWidth(3);
             lineFormatter.getLinePaint().setStrokeJoin(Paint.Join.ROUND);
-
             formatter = lineFormatter;
         }
 

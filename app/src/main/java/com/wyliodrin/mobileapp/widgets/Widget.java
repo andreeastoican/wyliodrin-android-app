@@ -1,7 +1,5 @@
 package com.wyliodrin.mobileapp.widgets;
 
-import android.app.Activity;
-
 import org.json.JSONObject;
 
 /**

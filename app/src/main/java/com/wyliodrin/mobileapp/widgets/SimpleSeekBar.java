@@ -5,8 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +15,12 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.wyliodrin.mobileapp.NewDashboardActivity;
 import com.wyliodrin.mobileapp.R;
 import com.wyliodrin.mobileapp.api.WylioMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.SocketImpl;
 import java.util.ArrayList;
 
 /**
