@@ -12,6 +12,7 @@ public interface Widget {
     public static final int TYPE_BUTTON = 3;
     public static final int TYPE_TOGGLE_BUTTON = 4;
     public static final int TYPE_SEEK_BAR = 5;
+    public static final int TYPE_SPEEDOMETER = 6;
 
     public JSONObject toJson();
 }

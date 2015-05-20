@@ -21,6 +21,7 @@ import com.wyliodrin.mobileapp.widgets.SimpleButton;
 import com.wyliodrin.mobileapp.widgets.GraphWidget;
 import com.wyliodrin.mobileapp.widgets.SimpleSeekBar;
 import com.wyliodrin.mobileapp.widgets.SimpleToggleButton;
+import com.wyliodrin.mobileapp.widgets.Speedometer;
 import com.wyliodrin.mobileapp.widgets.Thermometer;
 import com.wyliodrin.mobileapp.widgets.Widget;
 
@@ -38,12 +39,6 @@ public class NewDashboardActivity extends FragmentActivity {
 
     private JSONObject currentBoard;
     private int boardId = -1;
-
-    // Simple Message
-//    final WylioBoard board = new WylioBoard("250a7843-9eda-4a92-942d-dba0dfe3b0a0b836cb66-0ad1-46d6-b6ba-458781a38ca08ced6536-0a8a-49b0-bbf3-b072631d0ccf", "andreea.stoican.5_random@wyliodrin.com");
-
-    //final WylioBoard board = new WylioBoard("b883db27-a072-4481-aff2-2e5297d781c80a6febc0-6263-4118-9eeb-2fbb0530585b46a813ed-7eda-49b4-be5e-4a319c6c0da13a155792-fc2e-413f-82d9-9728ca5b829a");
-
 
     private View.OnLongClickListener widgetLongClick = new View.OnLongClickListener() {
         @Override
@@ -149,6 +144,16 @@ public class NewDashboardActivity extends FragmentActivity {
             }
         });
 
+        Button addSpeedometer = (Button) findViewById(R.id.add_speedometer);
+        addSpeedometer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Speedometer.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer),
+                        widgetLongClick, objects);
+                mDrawerLayout.closeDrawers();
+            }
+        });
+
         Intent intent = getIntent();
         String boardString = intent.getStringExtra("board");
         boardId = intent.getIntExtra("board_id", -1);
@@ -192,6 +197,9 @@ public class NewDashboardActivity extends FragmentActivity {
                         case Widget.TYPE_SEEK_BAR:
                             SimpleSeekBar.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer) ,widgetLongClick,
                                 objects, widget.optInt("width"), widget.optInt("max_value"));
+                        case Widget.TYPE_SPEEDOMETER:
+                            Speedometer.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick,
+                                    objects, widget.optInt("diameter"), widget.optInt("min_value"), widget.optInt("max_value"));
                             break;
                     }
                 }
