@@ -48,6 +48,8 @@ public class Speedometer extends View implements InputDataWidget {
     private Paint handScrewPaint;
     private int diameter;
 
+    private String label;
+
     public Speedometer(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -202,6 +204,7 @@ public class Speedometer extends View implements InputDataWidget {
                         String diameterValue = "";
                         String minValue = "";
                         String maxValue = "";
+                        String label = "";
 
                         EditText diameterEditText = (EditText) alert_dialog_xml.findViewById(R.id.speedometer_diameter);
                         if (diameterEditText != null) {
@@ -227,11 +230,19 @@ public class Speedometer extends View implements InputDataWidget {
                                 maxValueEditText.setError("Max value is required");
                         }
 
-                        if (!diameterValue.isEmpty() && !minValue.isEmpty() && !maxValue.isEmpty()) {
+                        EditText lableEditText = (EditText) alert_dialog_xml.findViewById(R.id.label);
+                        if (lableEditText != null) {
+                            label = lableEditText.getText().toString();
+
+                            if (label.isEmpty())
+                                lableEditText.setError("Label is required");
+                        }
+
+                        if (!diameterValue.isEmpty() && !minValue.isEmpty() && !maxValue.isEmpty() && !label.isEmpty()) {
 
                             addToBoard(activity, layout, onLongClick, objects,
                                     Integer.parseInt(diameterValue),
-                                    Float.parseFloat(maxValue), Float.parseFloat(minValue));
+                                    Float.parseFloat(maxValue), Float.parseFloat(minValue), label);
 
                             alertDialog.dismiss();
                         }
@@ -244,11 +255,12 @@ public class Speedometer extends View implements InputDataWidget {
     }
 
     public static void addToBoard(Activity activity, LinearLayout layout, OnLongClickListener onLongClick, ArrayList<Widget> objects,
-                                  int diameter, float minValue, float maxValue) {
+                                  int diameter, float minValue, float maxValue, String label) {
         // add the thermometer
         Speedometer speedometer = new Speedometer(activity, null);
         speedometer.setLayoutParams(new LinearLayout.LayoutParams(diameter, diameter));
         speedometer.setLimits(maxValue, minValue);
+        speedometer.setLabel(label);
 
         layout.addView(speedometer);
         objects.add(speedometer);
@@ -268,6 +280,11 @@ public class Speedometer extends View implements InputDataWidget {
             e.printStackTrace();
         }
         return obj;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     @Override

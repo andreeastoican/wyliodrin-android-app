@@ -16,7 +16,6 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:weightSum="1">
-
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -24,45 +23,16 @@
                 android:textColor="@color/black"
                 android:gravity="center"
                 android:textSize="20sp"
-                android:text="Diameter:" />
+                android:text="Sensor type:" />
 
-            <EditText
-                android:id="@+id/speedometer_diameter"
-                android:layout_width="match_parent"
+            <Spinner
+                android:id="@+id/sensor_type_spinner"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                android:layout_weight=".5"
-                android:gravity="center"
-                android:maxLength="4" >
-                <requestFocus />
-            </EditText>
+                android:entries="@array/sensor_types"
+                android:layout_row="1"
+                android:layout_column="0" />
 
-            </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:weightSum="1">
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight=".5"
-                android:textColor="@color/black"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:text="Min value:" />
-
-            <EditText
-                android:id="@+id/speedometer_min"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:layout_weight=".5"
-                android:gravity="center"
-                android:maxLength="4"/>
         </LinearLayout>
 
         <LinearLayout
@@ -72,6 +42,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:weightSum="1">
+
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -79,16 +50,17 @@
                 android:textColor="@color/black"
                 android:gravity="center"
                 android:textSize="20sp"
-                android:text="Max value:" />
+                android:text="Timeout updates:" />
 
             <EditText
-                android:id="@+id/speedometer_max"
+                android:id="@+id/timeout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberSigned"
+                android:inputType="number"
                 android:layout_weight=".5"
                 android:gravity="center"
-                android:maxLength="4" />
+                android:maxLength="4"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -111,10 +83,14 @@
                 android:id="@+id/label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberSigned"
+                android:inputType="number"
                 android:layout_weight=".5"
                 android:gravity="center"
                 android:maxLength="4" />
         </LinearLayout>
+
+
+
+
     </LinearLayout>
 </ScrollView>

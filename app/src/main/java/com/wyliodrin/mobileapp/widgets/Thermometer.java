@@ -36,6 +36,8 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
     private double min;
     private double max;
 
+    private String label;
+
     private ArrayList<TextView> labels;
 
     private double value;
@@ -168,6 +170,7 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
                         String height = "";
                         String minDegree = "";
                         String maxDegree = "";
+                        String label = "";
 
                         EditText widthEditText = (EditText) alert_dialog_xml.findViewById(R.id.thermometer_width);
                         if (widthEditText != null) {
@@ -201,11 +204,19 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
                                 maxDegreeEditText.setError("Max degree is required");
                         }
 
-                        if (!width.isEmpty() && !height.isEmpty() && !minDegree.isEmpty() && !maxDegree.isEmpty()) {
+                        EditText labelEditText = (EditText) alert_dialog_xml.findViewById(R.id.label);
+                        if (labelEditText != null) {
+                            label = labelEditText.getText().toString();
+
+                            if (label.isEmpty())
+                                maxDegreeEditText.setError("Label is required");
+                        }
+
+                        if (!width.isEmpty() && !height.isEmpty() && !minDegree.isEmpty() && !maxDegree.isEmpty() && !label.isEmpty()) {
 
                             addToBoard(activity, layout, onLongClick, objects,
                                     Integer.parseInt(width), Integer.parseInt(height),
-                                    Float.parseFloat(maxDegree), Float.parseFloat(minDegree));
+                                    Float.parseFloat(maxDegree), Float.parseFloat(minDegree), label);
 
                             alertDialog.dismiss();
                         }
@@ -218,12 +229,13 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
     }
 
     public static void addToBoard(Activity activity, LinearLayout layout, OnLongClickListener onLongClick, ArrayList<Widget> objects,
-                             int width, int height, double maxDegree, double minDegree) {
+                             int width, int height, double maxDegree, double minDegree, String label) {
         // add the thermometer
         Thermometer thermometer = new Thermometer(activity);
         thermometer.setLayoutParams(new LinearLayout.LayoutParams(width, height));
         thermometer.setSize(width, height);
         thermometer.setLimits(minDegree, maxDegree);
+        thermometer.setLabel(label);
 
         layout.addView(thermometer);
         objects.add(thermometer);
@@ -244,5 +256,10 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
             e.printStackTrace();
         }
         return obj;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        this.label = label;
     }
 }
