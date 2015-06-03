@@ -1,9 +1,12 @@
 package com.wyliodrin.mobileapp;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wyliodrin.mobileapp.widgets.SensorWidget;
 import com.wyliodrin.mobileapp.widgets.SimpleButton;
 import com.wyliodrin.mobileapp.widgets.GraphWidget;
 import com.wyliodrin.mobileapp.widgets.SimpleSeekBar;
@@ -30,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NewDashboardActivity extends FragmentActivity {
     ArrayList<Widget> objects;
@@ -154,6 +159,16 @@ public class NewDashboardActivity extends FragmentActivity {
             }
         });
 
+        Button addSensor = (Button) findViewById(R.id.add_sensor);
+        addSensor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SensorWidget.showAddDialog(NewDashboardActivity.this, (LinearLayout) findViewById(R.id.widgetsContainer),
+                        widgetLongClick, objects);
+                mDrawerLayout.closeDrawers();
+            }
+        });
+
         Intent intent = getIntent();
         String boardString = intent.getStringExtra("board");
         boardId = intent.getIntExtra("board_id", -1);
@@ -170,7 +185,7 @@ public class NewDashboardActivity extends FragmentActivity {
                         case Widget.TYPE_THERMOMETER:
                             Thermometer.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick, objects,
                                     widget.optInt("width", 200), widget.optInt("height", 300),
-                                    widget.optDouble("maxDegree", 70), widget.optDouble("minDegree", -20));
+                                    widget.optDouble("maxDegree", 70), widget.optDouble("minDegree", -20),widget.optString("label", "label"));
                             break;
                         case Widget.TYPE_GRAPH:
                             GraphWidget.GraphType type = null;
@@ -184,27 +199,37 @@ public class NewDashboardActivity extends FragmentActivity {
 
                             GraphWidget.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer),widgetLongClick,
                                     objects, widget.optInt("width", 200),widget.optInt("height", 300), widget.optString("title", "Step"),
-                                    type);
+                                    type, widget.optString("label"));
                             break;
                         case Widget.TYPE_BUTTON:
                             SimpleButton.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer) ,widgetLongClick,
-                                    objects, widget.optInt("width"), widget.optInt("height"), widget.optString("text_button"));
+                                    objects, widget.optInt("width"), widget.optInt("height"), widget.optString("text_button"), widget.optString("label"));
                             break;
                         case Widget.TYPE_TOGGLE_BUTTON:
                             SimpleToggleButton.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer) ,widgetLongClick,
-                                    objects, widget.optInt("width"), widget.optInt("height"), widget.optString("text_button_on"), widget.optString("text_button_off"));
+                                    objects, widget.optInt("width"), widget.optInt("height"), widget.optString("text_button_on"), widget.optString("text_button_off"), widget.optString("label"));
                             break;
                         case Widget.TYPE_SEEK_BAR:
                             SimpleSeekBar.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer) ,widgetLongClick,
-                                objects, widget.optInt("width"), widget.optInt("max_value"));
+                                objects, widget.optInt("width"), widget.optInt("max_value"), widget.optString("label"));
                         case Widget.TYPE_SPEEDOMETER:
                             Speedometer.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer), widgetLongClick,
-                                    objects, widget.optInt("diameter"), widget.optInt("min_value"), widget.optInt("max_value"));
+                                    objects, widget.optInt("diameter"), widget.optInt("min_value"), widget.optInt("max_value"), widget.optString("label"));
+                            break;
+                        case Widget.TYPE_SENSOR:
+                            int sensorType = widget.optInt("sensor");
+                            SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+                            List<Sensor> deviceSensors = mSensorManager.getSensorList(sensorType);
+
+                            if (deviceSensors.isEmpty()) return;
+
+                            Sensor sensor = deviceSensors.get(0);
+
+                            SensorWidget.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer) ,widgetLongClick,
+                                    objects, sensor, widget.optInt("update_timeout"), widget.optInt("width"), widget.optInt("height"), widget.optString("label"));
                             break;
                     }
                 }
-
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }

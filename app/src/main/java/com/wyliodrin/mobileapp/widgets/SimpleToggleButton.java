@@ -30,6 +30,7 @@ public class SimpleToggleButton extends ToggleButton implements InputDataWidget 
     private String textOFF;
     private int width;
     private int height;
+    private String label;
 
     public SimpleToggleButton(Context context) {
         super(context);
@@ -73,6 +74,7 @@ public class SimpleToggleButton extends ToggleButton implements InputDataWidget 
                         String height = "";
                         String textOn = "";
                         String textOff = "";
+                        String label = "";
 
                         EditText widthEditText = (EditText) alert_dialog_xml.findViewById(R.id.width);
                         if (widthEditText != null) {
@@ -106,9 +108,17 @@ public class SimpleToggleButton extends ToggleButton implements InputDataWidget 
                                 textOnButtOff.setError("Text button off is required");
                         }
 
-                        if (!width.isEmpty() && !height.isEmpty() && !textOn.isEmpty() && !textOff.isEmpty()) {
+                        EditText labelEditText = (EditText) alert_dialog_xml.findViewById(R.id.label);
+                        if (labelEditText != null) {
+                            label = labelEditText.getText().toString();
 
-                            addToBoard(activity, layout, onLongClick, objects, Integer.parseInt(width), Integer.parseInt(height), textOn, textOff);
+                            if (label.isEmpty())
+                                labelEditText.setError("Label is required");
+                        }
+
+                        if (!width.isEmpty() && !height.isEmpty() && !textOn.isEmpty() && !textOff.isEmpty() && !label.isEmpty()) {
+
+                            addToBoard(activity, layout, onLongClick, objects, Integer.parseInt(width), Integer.parseInt(height), textOn, textOff, label);
 
                             alertDialog.dismiss();
                         }
@@ -121,11 +131,12 @@ public class SimpleToggleButton extends ToggleButton implements InputDataWidget 
     }
 
     public static void addToBoard(Activity activity, LinearLayout layout, OnLongClickListener onLongClick, ArrayList<Widget> objects,
-                                  int width, int height, String buttonTextOn, String buttonTextOff) {
+                                  int width, int height, String buttonTextOn, String buttonTextOff, String label) {
 
         SimpleToggleButton simpleToggleButton = new SimpleToggleButton(activity);
         simpleToggleButton.setTextOn(buttonTextOn);
         simpleToggleButton.setTextOff(buttonTextOff);
+        simpleToggleButton.setLabel(label);
 
         simpleToggleButton.setLayoutParams(new LinearLayout.LayoutParams(width, height));
         simpleToggleButton.setOnLongClickListener(onLongClick);
@@ -153,9 +164,15 @@ public class SimpleToggleButton extends ToggleButton implements InputDataWidget 
             obj.put("height", height);
             obj.put("text_button_on", textON);
             obj.put("text_button_off", textOFF);
+            obj.put("label", label);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return obj;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

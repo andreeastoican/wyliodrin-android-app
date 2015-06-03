@@ -46,6 +46,7 @@ public class GraphWidget extends XYPlot implements InputDataWidget {
     private int width;
     private int height;
     private GraphType currentType;
+    private String label;
 
     public static enum GraphType {
         StepGraph,
@@ -196,6 +197,7 @@ public class GraphWidget extends XYPlot implements InputDataWidget {
                         String width = "";
                         String height = "";
                         String title = "";
+                        String label = "";
 
                         EditText widthEditText = (EditText) alert_dialog_xml.findViewById(R.id.width);
                         if (widthEditText != null) {
@@ -221,11 +223,19 @@ public class GraphWidget extends XYPlot implements InputDataWidget {
                                 titleEditText.setError("Title is required");
                         }
 
-                        if (!width.isEmpty() && !height.isEmpty() && !title.isEmpty()) {
+                        EditText labelEditText = (EditText) alert_dialog_xml.findViewById(R.id.label);
+                        if (labelEditText != null) {
+                            label = labelEditText.getText().toString();
+
+                            if (label.isEmpty())
+                                labelEditText.setError("Label is required");
+                        }
+
+                        if (!width.isEmpty() && !height.isEmpty() && !title.isEmpty() && !label.isEmpty()) {
 
                             addToBoard(activity, layout, onLongClick, objects,
                                     Integer.parseInt(width), Integer.parseInt(height),
-                                    title, graphType);
+                                    title, graphType, label);
                             alertDialog.dismiss();
                         }
                     }
@@ -237,7 +247,7 @@ public class GraphWidget extends XYPlot implements InputDataWidget {
     }
 
     public static void addToBoard(Activity activity, LinearLayout layout, OnLongClickListener onLongClick, ArrayList<Widget> objects,
-                                  int width, int height, String title, GraphType graphType) {
+                                  int width, int height, String title, GraphType graphType, String label) {
         // add the thermometer
         final GraphWidget graph = new GraphWidget(activity, graphType);
 
@@ -245,6 +255,7 @@ public class GraphWidget extends XYPlot implements InputDataWidget {
         graph.setOnLongClickListener(onLongClick);
         graph.setProperties(title, width, height, graphType);
         graph.setTitle(title);
+        graph.setLabel(label);
 
         layout.addView(graph);
         objects.add(graph);
@@ -293,10 +304,16 @@ public class GraphWidget extends XYPlot implements InputDataWidget {
             obj.put("title", title);
             obj.put("width", width);
             obj.put("height", height);
+            obj.put("label", label);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return obj;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        this.label = label;
     }
 
 }

@@ -28,6 +28,7 @@ public class SimpleButton extends Button implements InputDataWidget {
     private String textButton;
     private int width;
     private int height;
+    private String label;
 
     public SimpleButton(Context context) {
         super(context);
@@ -70,6 +71,7 @@ public class SimpleButton extends Button implements InputDataWidget {
                         String width = "";
                         String height = "";
                         String text = "";
+                        String label = "";
 
                         EditText widthEditText = (EditText) alert_dialog_xml.findViewById(R.id.width);
                         if (widthEditText != null) {
@@ -95,9 +97,17 @@ public class SimpleButton extends Button implements InputDataWidget {
                                 textButton.setError("Text button is required");
                         }
 
-                        if (!width.isEmpty() && !height.isEmpty() && !text.isEmpty()) {
+                        EditText labelEditText = (EditText) alert_dialog_xml.findViewById(R.id.label);
+                        if (labelEditText != null) {
+                            label = labelEditText.getText().toString();
 
-                            addToBoard(activity, layout, onLongClick, objects, Integer.parseInt(width), Integer.parseInt(height), text);
+                            if (label.isEmpty())
+                                labelEditText.setError("Label is required");
+                        }
+
+                        if (!width.isEmpty() && !height.isEmpty() && !text.isEmpty() && !label.isEmpty()) {
+
+                            addToBoard(activity, layout, onLongClick, objects, Integer.parseInt(width), Integer.parseInt(height), text, label);
 
                             alertDialog.dismiss();
                         }
@@ -110,14 +120,14 @@ public class SimpleButton extends Button implements InputDataWidget {
     }
 
     public static void addToBoard(Activity activity, LinearLayout layout, OnLongClickListener onLongClick, ArrayList<Widget> objects,
-                                  int width, int height, String buttonText) {
+                                  int width, int height, String buttonText, String label) {
 
         SimpleButton simpleButton = new SimpleButton(activity);
         simpleButton.setText(buttonText);
 
         simpleButton.setLayoutParams(new LinearLayout.LayoutParams(width, height));
         simpleButton.setOnLongClickListener(onLongClick);
-
+        simpleButton.setLabel(label);
 
         simpleButton.width = width;
         simpleButton.height = height;
@@ -135,10 +145,16 @@ public class SimpleButton extends Button implements InputDataWidget {
             obj.put("width", width);
             obj.put("height", height);
             obj.put("text_button", textButton);
+            obj.put("label", label);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return obj;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     @Override

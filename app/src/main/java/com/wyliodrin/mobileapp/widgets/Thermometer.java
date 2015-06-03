@@ -209,7 +209,7 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
                             label = labelEditText.getText().toString();
 
                             if (label.isEmpty())
-                                maxDegreeEditText.setError("Label is required");
+                                labelEditText.setError("Label is required");
                         }
 
                         if (!width.isEmpty() && !height.isEmpty() && !minDegree.isEmpty() && !maxDegree.isEmpty() && !label.isEmpty()) {
@@ -252,6 +252,7 @@ public class Thermometer extends RelativeLayout implements InputDataWidget {
             obj.put("height", height);
             obj.put("minDegree", min);
             obj.put("maxDegree", max);
+            obj.put("label", label);
         } catch (JSONException e) {
             e.printStackTrace();
         }

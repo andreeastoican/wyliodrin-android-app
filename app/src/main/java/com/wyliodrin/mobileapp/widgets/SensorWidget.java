@@ -38,6 +38,8 @@ public class SensorWidget extends TextView implements OutputDataWidget {
     private static Context context;
     private long updateTimeout = 1000;
     private String label;
+    private int width;
+    private int height;
 
     public SensorWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -49,6 +51,11 @@ public class SensorWidget extends TextView implements OutputDataWidget {
 
         SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         sensorManager.registerListener(new SensorListener(), sensor, sensor.getType());
+    }
+
+    public void setSize(int width, int height) {
+        this.width = width;
+        this.height = height;
     }
 
     private void setTimeout(int timeout) {
@@ -70,6 +77,19 @@ public class SensorWidget extends TextView implements OutputDataWidget {
         final View alert_dialog_xml =inflater.inflate(R.layout.alert_dialog_sensor, null);
         alertDialogBuilder.setView(alert_dialog_xml);
 
+        final Spinner spinner = (Spinner) alert_dialog_xml.findViewById(R.id.sensor_type_spinner);
+
+        SensorManager mSensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
+        final List<Sensor> deviceSensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
+
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+        for (int i = 0; i < deviceSensors.size(); i++) {
+            spinnerAdapter.add(deviceSensors.get(i).getName());
+        }
+        spinnerAdapter.notifyDataSetChanged();
+
         alertDialogBuilder.setPositiveButton("Done", null);
 
         alertDialogBuilder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
@@ -90,21 +110,9 @@ public class SensorWidget extends TextView implements OutputDataWidget {
 
                     public void onClick(View v) {
                         String width = "";
+                        String height = "";
                         String timeout = "";
                         String label = "";
-
-                        Spinner spinner = (Spinner) alert_dialog_xml.findViewById(R.id.sensor_type_spinner);
-
-                        SensorManager mSensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
-                        List<Sensor> deviceSensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
-
-                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item);
-                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinner.setAdapter(spinnerAdapter);
-                        for (int i = 0; i < deviceSensors.size(); i++) {
-                            spinnerAdapter.add(deviceSensors.get(i).getName());
-                        }
-                        spinnerAdapter.notifyDataSetChanged();
 
                         EditText timeoutEditText = (EditText) alert_dialog_xml.findViewById(R.id.timeout);
                         if (timeoutEditText != null) {
@@ -122,11 +130,27 @@ public class SensorWidget extends TextView implements OutputDataWidget {
                                 labelButton.setError("Label is required");
                         }
 
-                        if (!timeout.isEmpty() && !label.isEmpty()) {
+                        EditText widthEditText = (EditText) alert_dialog_xml.findViewById(R.id.width);
+                        if (widthEditText != null) {
+                            width = widthEditText.getText().toString();
+
+                            if (width.isEmpty())
+                                widthEditText.setError("Width is required");
+                        }
+
+                        EditText heightEditText = (EditText) alert_dialog_xml.findViewById(R.id.width);
+                        if (heightEditText != null) {
+                            height = heightEditText.getText().toString();
+
+                            if (height.isEmpty())
+                                heightEditText.setError("Height is required");
+                        }
+
+                        if (!timeout.isEmpty() && !label.isEmpty() && !width.isEmpty() && !height.isEmpty()) {
 
                             int sensorIndex = spinner.getSelectedItemPosition();
                             Sensor sensor = deviceSensors.get(sensorIndex);
-                            addToBoard(activity, layout, onLongClick, objects, sensor, Integer.parseInt(timeout), label);
+                            addToBoard(activity, layout, onLongClick, objects, sensor, Integer.parseInt(timeout), Integer.parseInt(width), Integer.parseInt(height), label);
 
                             alertDialog.dismiss();
                         }
@@ -139,15 +163,20 @@ public class SensorWidget extends TextView implements OutputDataWidget {
     }
 
     public static void addToBoard(Activity activity, LinearLayout layout, OnLongClickListener onLongClick, ArrayList<Widget> objects,
-                                  Sensor sensor, int timeout, String label) {
+                                  Sensor sensor, int timeout, int width, int height, String label) {
 
-        SensorWidget widget = new SensorWidget(activity, null);
-        widget.setSensor(sensor);
-        widget.setTimeout(timeout);
-        widget.setLabel(label);
+        SensorWidget sensorWidget = new SensorWidget(activity, null);
 
-      //  layout.addView(sensor);
-        //objects.add(simpleButton);
+        sensorWidget.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+        sensorWidget.setSize(width, height);
+        sensorWidget.setSensor(sensor);
+        sensorWidget.setTimeout(timeout);
+        sensorWidget.setLabel(label);
+
+        layout.addView(sensorWidget);
+        objects.add(sensorWidget);
+
+        sensorWidget.setOnLongClickListener(onLongClick);
     }
 
     @Override
@@ -157,7 +186,18 @@ public class SensorWidget extends TextView implements OutputDataWidget {
 
     @Override
     public JSONObject toJson() {
-        return null;
+        JSONObject obj=new JSONObject();
+        try {
+            obj.put("type", TYPE_SENSOR);
+            obj.put("update_timeout", updateTimeout);
+            obj.put("sensor", sensor.getType());
+            obj.put("width", width);
+            obj.put("height", height);
+            obj.put("label", label);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return obj;
     }
 
     @Override
@@ -167,7 +207,7 @@ public class SensorWidget extends TextView implements OutputDataWidget {
 
     private class SensorListener implements SensorEventListener {
 
-        private long lastUpdate;
+        private long lastUpdate = 0;
 
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {

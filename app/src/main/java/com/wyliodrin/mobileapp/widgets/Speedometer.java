@@ -276,6 +276,7 @@ public class Speedometer extends View implements InputDataWidget {
             obj.put("diameter", diameter);
             obj.put("min_value", minValue);
             obj.put("max_value", maxValue);
+            obj.put("label", label);
         } catch (JSONException e) {
             e.printStackTrace();
         }

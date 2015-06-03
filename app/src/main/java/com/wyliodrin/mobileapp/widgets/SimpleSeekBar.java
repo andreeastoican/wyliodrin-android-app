@@ -30,6 +30,7 @@ public class SimpleSeekBar extends RelativeLayout implements InputDataWidget {
 
     private int maxValue;
     private int width;
+    private String label;
 
     public SimpleSeekBar(Context context, int width, int maxValue) {
         this(context, null, width, maxValue);
@@ -114,6 +115,7 @@ public class SimpleSeekBar extends RelativeLayout implements InputDataWidget {
                     public void onClick(View v) {
                         String width = "";
                         String maxValue = "";
+                        String label = "";
 
                         EditText widthEditText = (EditText) alert_dialog_xml.findViewById(R.id.width);
                         if (widthEditText != null) {
@@ -131,9 +133,17 @@ public class SimpleSeekBar extends RelativeLayout implements InputDataWidget {
                                 maxValueButton.setError("Max value is required");
                         }
 
-                        if (!width.isEmpty() && !maxValue.isEmpty()) {
+                        EditText labelEditText = (EditText) alert_dialog_xml.findViewById(R.id.label);
+                        if (labelEditText != null) {
+                            label = labelEditText.getText().toString();
 
-                            addToBoard(activity, layout, onLongClick, objects, Integer.parseInt(width), Integer.parseInt(maxValue));
+                            if (label.isEmpty())
+                                labelEditText.setError("Label is required");
+                        }
+
+                        if (!width.isEmpty() && !maxValue.isEmpty() && !label.isEmpty()) {
+
+                            addToBoard(activity, layout, onLongClick, objects, Integer.parseInt(width), Integer.parseInt(maxValue), label);
 
                             alertDialog.dismiss();
                         }
@@ -146,14 +156,12 @@ public class SimpleSeekBar extends RelativeLayout implements InputDataWidget {
     }
 
     public static void addToBoard(Activity activity, LinearLayout layout, OnLongClickListener onLongClick, ArrayList<Widget> objects,
-                                  int width, int max) {
-
-
-
+                                  int width, int max, String label) {
         SimpleSeekBar simpleSeekBar = new SimpleSeekBar(activity, width, max);
 
         simpleSeekBar.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
         simpleSeekBar.setOnLongClickListener(onLongClick);
+        simpleSeekBar.setLabel(label);
 
         objects.add(simpleSeekBar);
 
@@ -172,10 +180,16 @@ public class SimpleSeekBar extends RelativeLayout implements InputDataWidget {
             obj.put("type", TYPE_SEEK_BAR);
             obj.put("width", width);
             obj.put("max_value", maxValue);
+            obj.put("label", label);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return obj;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        this.label = label;
     }
 
 }
