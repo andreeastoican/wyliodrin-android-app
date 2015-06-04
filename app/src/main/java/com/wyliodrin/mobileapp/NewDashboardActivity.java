@@ -226,7 +226,7 @@ public class NewDashboardActivity extends FragmentActivity {
                             Sensor sensor = deviceSensors.get(0);
 
                             SensorWidget.addToBoard(this, (LinearLayout) findViewById(R.id.widgetsContainer) ,widgetLongClick,
-                                    objects, sensor, widget.optInt("update_timeout"), widget.optInt("width"), widget.optInt("height"), widget.optString("label"));
+                                    objects, sensor, widget.optInt("update_timeout"), widget.optInt("width"), widget.optString("label"));
                             break;
                     }
                 }

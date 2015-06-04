@@ -39,7 +39,6 @@ public class SensorWidget extends TextView implements OutputDataWidget {
     private long updateTimeout = 1000;
     private String label;
     private int width;
-    private int height;
 
     public SensorWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -53,9 +52,8 @@ public class SensorWidget extends TextView implements OutputDataWidget {
         sensorManager.registerListener(new SensorListener(), sensor, sensor.getType());
     }
 
-    public void setSize(int width, int height) {
+    public void setSize(int width) {
         this.width = width;
-        this.height = height;
     }
 
     private void setTimeout(int timeout) {
@@ -150,7 +148,7 @@ public class SensorWidget extends TextView implements OutputDataWidget {
 
                             int sensorIndex = spinner.getSelectedItemPosition();
                             Sensor sensor = deviceSensors.get(sensorIndex);
-                            addToBoard(activity, layout, onLongClick, objects, sensor, Integer.parseInt(timeout), Integer.parseInt(width), Integer.parseInt(height), label);
+                            addToBoard(activity, layout, onLongClick, objects, sensor, Integer.parseInt(timeout), Integer.parseInt(width), label);
 
                             alertDialog.dismiss();
                         }
@@ -163,12 +161,12 @@ public class SensorWidget extends TextView implements OutputDataWidget {
     }
 
     public static void addToBoard(Activity activity, LinearLayout layout, OnLongClickListener onLongClick, ArrayList<Widget> objects,
-                                  Sensor sensor, int timeout, int width, int height, String label) {
+                                  Sensor sensor, int timeout, int width, String label) {
 
         SensorWidget sensorWidget = new SensorWidget(activity, null);
 
-        sensorWidget.setLayoutParams(new LinearLayout.LayoutParams(width, height));
-        sensorWidget.setSize(width, height);
+        sensorWidget.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
+        sensorWidget.setSize(width);
         sensorWidget.setSensor(sensor);
         sensorWidget.setTimeout(timeout);
         sensorWidget.setLabel(label);
@@ -192,7 +190,6 @@ public class SensorWidget extends TextView implements OutputDataWidget {
             obj.put("update_timeout", updateTimeout);
             obj.put("sensor", sensor.getType());
             obj.put("width", width);
-            obj.put("height", height);
             obj.put("label", label);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -228,7 +225,19 @@ public class SensorWidget extends TextView implements OutputDataWidget {
             }
 
             sendData(values.toString());
-            setText(values.toString());
+            String value = values.toString().replace("[", "");
+            value = value.replace("]", "");
+            String[] parts = value.split(",");
+
+            String sensorValues = "";
+
+            sensorValues += "x: " + parts[0];
+            sensorValues += " y: " + parts[1];
+            if (parts.length == 3) {
+                sensorValues += " z: " + parts[2];
+            }
+
+            setText(sensorValues);
         }
 
         @Override
