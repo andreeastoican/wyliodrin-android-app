@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -165,9 +166,16 @@ public class SensorWidget extends TextView implements OutputDataWidget {
 
         SensorWidget sensorWidget = new SensorWidget(activity, null);
 
-        sensorWidget.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
+        int padding = width / 40;
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(padding, padding, padding, padding);
+
+        sensorWidget.setLayoutParams(layoutParams);
         sensorWidget.setSize(width);
+        sensorWidget.setPadding(padding, padding, padding, padding);
         sensorWidget.setSensor(sensor);
+        sensorWidget.setBackgroundColor(Color.GRAY);
         sensorWidget.setTimeout(timeout);
         sensorWidget.setLabel(label);
 
@@ -225,18 +233,14 @@ public class SensorWidget extends TextView implements OutputDataWidget {
             }
 
             sendData(values.toString());
-            String value = values.toString().replace("[", "");
-            value = value.replace("]", "");
-            String[] parts = value.split(",");
+            float[] parts = sensorEvent.values;
 
-            String sensorValues = "";
+            String sensorValues = sensor.getName() + ":\n";
 
-            sensorValues += "x: " + parts[0];
-            sensorValues += " y: " + parts[1];
-            if (parts.length == 3) {
-                sensorValues += " z: " + parts[2];
-            }
+            for (int i = 0; i < parts.length; i++)
+                sensorValues += parts[i] + "\n";
 
+            setMaxLines(parts.length + 1);
             setText(sensorValues);
         }
 
