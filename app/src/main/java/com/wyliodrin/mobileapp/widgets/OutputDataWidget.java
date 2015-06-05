@@ -7,4 +7,5 @@ import com.wyliodrin.mobileapp.api.WylioMessage;
  */
 public interface OutputDataWidget extends Widget {
     void sendData(String message);
+    void sendData(double message);
 }

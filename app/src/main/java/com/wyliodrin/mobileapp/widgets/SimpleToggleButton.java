@@ -11,8 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.wyliodrin.mobileapp.NewDashboardActivity;
 import com.wyliodrin.mobileapp.R;
 import com.wyliodrin.mobileapp.api.WylioMessage;
 
@@ -24,7 +26,7 @@ import java.util.ArrayList;
 /**
  * Created by Andreea Stoican on 20.04.2015.
  */
-public class SimpleToggleButton extends ToggleButton implements InputDataWidget {
+public class SimpleToggleButton extends ToggleButton implements OutputDataWidget {
 
     private String textON;
     private String textOFF;
@@ -32,8 +34,22 @@ public class SimpleToggleButton extends ToggleButton implements InputDataWidget 
     private int height;
     private String label;
 
-    public SimpleToggleButton(Context context) {
+    public SimpleToggleButton(final Context context) {
         super(context);
+
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isChecked()) {
+                    sendData(1);
+                    Toast.makeText(context, "send: 1", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    sendData(0);
+                    Toast.makeText(context, "send: 0", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     public static void showAddDialog(final Activity activity, final LinearLayout layout, final View.OnLongClickListener onLongClick, final ArrayList<Widget> objects) {
@@ -151,11 +167,6 @@ public class SimpleToggleButton extends ToggleButton implements InputDataWidget 
     }
 
     @Override
-    public void addData(WylioMessage message) {
-
-    }
-
-    @Override
     public JSONObject toJson() {
         JSONObject obj=new JSONObject();
         try {
@@ -174,5 +185,17 @@ public class SimpleToggleButton extends ToggleButton implements InputDataWidget 
     @Override
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    @Override
+    public void sendData(String message) {
+        if (NewDashboardActivity.wylioBoard != null)
+            NewDashboardActivity.wylioBoard.sendMessage(label, message);
+    }
+
+    @Override
+    public void sendData(double message) {
+        if (NewDashboardActivity.wylioBoard != null)
+            NewDashboardActivity.wylioBoard.sendMessage(label, message);
     }
 }

@@ -78,7 +78,7 @@ public class Speedometer extends View implements InputDataWidget {
         diameter = getWidth();
 
         if (shader == null) {
-            shader = new LinearGradient(0, 0, 0, diameter, Color.WHITE, Color.BLACK, Shader.TileMode.CLAMP);
+            shader = new LinearGradient(0, 0, 0, diameter, Color.rgb(192,192,192), Color.rgb(112,112,112), Shader.TileMode.CLAMP);
             paint.setShader(shader);
 
             scalePaint = new Paint();

@@ -15,6 +15,9 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.wyliodrin.mobileapp.NewDashboardActivity;
 import com.wyliodrin.mobileapp.R;
 import com.wyliodrin.mobileapp.api.WylioMessage;
 
@@ -26,7 +29,7 @@ import java.util.ArrayList;
 /**
  * Created by Andreea Stoican on 21.04.2015.
  */
-public class SimpleSeekBar extends RelativeLayout implements InputDataWidget {
+public class SimpleSeekBar extends RelativeLayout implements OutputDataWidget {
 
     private int maxValue;
     private int width;
@@ -36,7 +39,7 @@ public class SimpleSeekBar extends RelativeLayout implements InputDataWidget {
         this(context, null, width, maxValue);
     }
 
-    public SimpleSeekBar(Context context, AttributeSet attrs, int width, int maxValue) {
+    public SimpleSeekBar(final Context context, AttributeSet attrs, int width, int maxValue) {
         super(context, attrs);
 
         this.width = width;
@@ -57,7 +60,7 @@ public class SimpleSeekBar extends RelativeLayout implements InputDataWidget {
 
         minValueTextView.setText("0");
 
-        maxValueTextView.setText(maxValue+"");
+        maxValueTextView.setText(maxValue + "");
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -73,7 +76,9 @@ public class SimpleSeekBar extends RelativeLayout implements InputDataWidget {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                String value = result.getText().toString().replace("Value:", "");
+                sendData(Integer.parseInt(value));
+                Toast.makeText(context, "send: "  +  Integer.parseInt(value), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -96,8 +101,8 @@ public class SimpleSeekBar extends RelativeLayout implements InputDataWidget {
 
         alertDialogBuilder.setPositiveButton("Done", null);
 
-        alertDialogBuilder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog,int id) {
+        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
             }
         });
@@ -169,11 +174,6 @@ public class SimpleSeekBar extends RelativeLayout implements InputDataWidget {
     }
 
     @Override
-    public void addData(WylioMessage message) {
-
-    }
-
-    @Override
     public JSONObject toJson() {
         JSONObject obj=new JSONObject();
         try {
@@ -192,4 +192,15 @@ public class SimpleSeekBar extends RelativeLayout implements InputDataWidget {
         this.label = label;
     }
 
+    @Override
+    public void sendData(String message) {
+        if (NewDashboardActivity.wylioBoard != null)
+            NewDashboardActivity.wylioBoard.sendMessage(label, message);
+    }
+
+    @Override
+    public void sendData(double message) {
+        if (NewDashboardActivity.wylioBoard != null)
+            NewDashboardActivity.wylioBoard.sendMessage(label, message);
+    }
 }

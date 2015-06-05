@@ -28,7 +28,6 @@ import com.androidplot.xy.XYStepMode;
 import com.wyliodrin.mobileapp.R;
 import com.wyliodrin.mobileapp.api.WylioMessage;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

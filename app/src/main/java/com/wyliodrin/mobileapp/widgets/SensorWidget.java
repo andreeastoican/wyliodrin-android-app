@@ -21,6 +21,7 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.wyliodrin.mobileapp.NewDashboardActivity;
 import com.wyliodrin.mobileapp.R;
 
 import org.json.JSONArray;
@@ -187,7 +188,14 @@ public class SensorWidget extends TextView implements OutputDataWidget {
 
     @Override
     public void sendData(String message) {
+        if (NewDashboardActivity.wylioBoard != null)
+            NewDashboardActivity.wylioBoard.sendMessage(label, message);
+    }
 
+    @Override
+    public void sendData(double message) {
+        if (NewDashboardActivity.wylioBoard != null)
+            NewDashboardActivity.wylioBoard.sendMessage(label, message);
     }
 
     @Override
@@ -242,6 +250,7 @@ public class SensorWidget extends TextView implements OutputDataWidget {
 
             setMaxLines(parts.length + 1);
             setText(sensorValues);
+            sendData(sensorValues);
         }
 
         @Override

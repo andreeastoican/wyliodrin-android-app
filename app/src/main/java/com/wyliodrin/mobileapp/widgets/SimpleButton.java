@@ -11,7 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
+import com.wyliodrin.mobileapp.NewDashboardActivity;
 import com.wyliodrin.mobileapp.R;
 import com.wyliodrin.mobileapp.api.WylioMessage;
 
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 /**
  * Created by Andreea Stoican on 07.04.2015.
  */
-public class SimpleButton extends Button implements InputDataWidget {
+public class SimpleButton extends Button implements OutputDataWidget {
 
     private String textButton;
     private int width;
@@ -32,6 +34,15 @@ public class SimpleButton extends Button implements InputDataWidget {
 
     public SimpleButton(Context context) {
         super(context);
+
+        final Context contextFinal = context;
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendData(getText().toString());
+                Toast.makeText(contextFinal, "send: " + getText().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public static void showAddDialog(final Activity activity, final LinearLayout layout, final View.OnLongClickListener onLongClick, final ArrayList<Widget> objects) {
@@ -158,6 +169,14 @@ public class SimpleButton extends Button implements InputDataWidget {
     }
 
     @Override
-    public void addData(WylioMessage message) {}
+    public void sendData(String message) {
+        if (NewDashboardActivity.wylioBoard != null)
+            NewDashboardActivity.wylioBoard.sendMessage(label, message);
+    }
 
+    @Override
+    public void sendData(double message) {
+        if (NewDashboardActivity.wylioBoard != null)
+            NewDashboardActivity.wylioBoard.sendMessage(label, message);
+    }
 }

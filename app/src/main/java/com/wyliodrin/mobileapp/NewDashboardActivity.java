@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wyliodrin.mobileapp.api.WylioBoard;
 import com.wyliodrin.mobileapp.widgets.SensorWidget;
 import com.wyliodrin.mobileapp.widgets.SimpleButton;
 import com.wyliodrin.mobileapp.widgets.GraphWidget;
@@ -44,6 +45,8 @@ public class NewDashboardActivity extends FragmentActivity {
 
     private JSONObject currentBoard;
     private int boardId = -1;
+
+    public static WylioBoard wylioBoard;
 
     private View.OnLongClickListener widgetLongClick = new View.OnLongClickListener() {
         @Override
@@ -70,6 +73,9 @@ public class NewDashboardActivity extends FragmentActivity {
 
         objects = new ArrayList<Widget>();
         shPref = getSharedPreferences("dashboard", MODE_PRIVATE);
+
+        String token = "";
+        wylioBoard = new WylioBoard(token);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
