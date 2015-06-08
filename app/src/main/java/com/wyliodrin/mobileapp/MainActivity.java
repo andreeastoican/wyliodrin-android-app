@@ -25,7 +25,7 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
-    public SharedPreferences shPref;
+    private SharedPreferences shPref;
     private ArrayAdapter<String> adapter;
 
     @Override

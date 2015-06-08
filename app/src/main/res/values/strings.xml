@@ -13,4 +13,5 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="save_board">Save</string>
     <array name="sensor_types" ></array>
+    <string name="title_activity_login">LoginActivity</string>
 </resources>
