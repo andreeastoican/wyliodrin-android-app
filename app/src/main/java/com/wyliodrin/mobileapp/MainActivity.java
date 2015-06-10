@@ -57,7 +57,7 @@ public class MainActivity extends ActionBarActivity {
             boardList = new JSONArray(boards);
         } catch (JSONException e) {
             boardList = new JSONArray();
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
         for (int i = 0; i < boardList.length(); i++) {
@@ -66,7 +66,7 @@ public class MainActivity extends ActionBarActivity {
                 adapter.add(board.optString("name", ""));
                 adapter.notifyDataSetChanged();
             } catch (JSONException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         }
 

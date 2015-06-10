@@ -38,8 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewDashboardActivity extends FragmentActivity {
-    ArrayList<Widget> objects;
-    public SharedPreferences shPref;
+    private ArrayList<Widget> objects;
+    private SharedPreferences shPref;
 
     private DrawerLayout mDrawerLayout;
 
